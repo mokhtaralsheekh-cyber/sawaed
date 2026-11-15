@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>منظومة تسعير شحنات البطاريات</title>
+<style>
+:root{--bg:#f2f5f4;--card:#fff;--ink:#13222d;--mute:#5d6c76;--line:#d5dedb;--acc:#0f6b63;--accbg:#e1f1ee;--warn:#b45309;--good:#15803d;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a20;--card:#17262e;--ink:#e6eeee;--mute:#9db0b5;--line:#2b404a;--acc:#4fd1c0;--accbg:#173a3a;--warn:#f0a850;--good:#6ee7a0}}
+*{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,"Noto Naskh Arabic","Noto Sans Arabic",Arial,sans-serif;line-height:1.6}
+main{max-width:1100px;margin:0 auto;padding:14px}
+h1{font-size:1.25rem;margin:0}
+.sub{color:var(--mute);font-size:.85rem;margin:2px 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:14px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+.kpi small{color:var(--mute);display:block}
+.kpi b{font-size:1.3rem;font-variant-numeric:tabular-nums;display:block}
+.kpi.profit{background:var(--accbg);border-color:var(--acc)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+label{display:block;font-size:.8rem;color:var(--mute);margin-bottom:3px}
+input,select{width:100%;font:inherit;padding:7px 9px;border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--ink);font-variant-numeric:tabular-nums}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.row{display:flex;gap:6px}.row select{width:auto}
+.hint{font-size:.75rem;color:var(--mute);margin-top:3px}
+.wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:900px;font-size:.85rem}
+th,td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+th{color:var(--mute);font-weight:600;background:var(--bg)}
+td input{min-width:70px;padding:4px 6px}
+td.name input{min-width:150px}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+button{font:inherit;cursor:pointer;border-radius:8px;padding:8px 14px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+button.p{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:700}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button.p{color:#06201c}}
+button.x{color:var(--warn)}
+.kpi.c{color:#fff;border:0}.kpi.c small{color:rgba(255,255,255,.85)}.c1{background:linear-gradient(135deg,#a9791f,#d4a24a)}.c2{background:linear-gradient(135deg,#b4531a,#e07b39)}.c3{background:linear-gradient(135deg,#4338ca,#6d5ce6)}.c4{background:linear-gradient(135deg,#6d28d9,#8b5cf6)}.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:14px}.two .card{margin:0}
+.hero{background:linear-gradient(160deg,#10224f,#050a1c);color:#fff;border-radius:16px;padding:16px;margin-bottom:12px}.hero h1{color:#fff}.hrow{display:flex;gap:12px;align-items:flex-start}.logo{background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:14px;width:52px;height:52px;display:grid;place-items:center;font-size:24px;flex:none}.chip{display:inline-block;font-size:.75rem;color:#34d399;border:1px solid #1f6f5a;background:#0b2a2a;border-radius:99px;padding:2px 10px;margin:4px 0}.hero .sub{color:#9fe0ff;margin:4px 0 0}.hbtns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.hbtns button{border:0;font-weight:700;color:#fff;padding:10px 14px}.b-ai{background:linear-gradient(90deg,#2563eb,#7c3aed)}.b-wa{background:#059669}.b-q{background:#f59e0b;color:#1a1204!important}.b-x{background:#1e293b;border:1px solid #334155!important}.b-i{background:#fbbf24;color:#1a1204!important}.hm{margin-top:8px;font-size:.8rem;color:#cbd5e1;min-height:1em}.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:10px}.tab{white-space:nowrap;border-radius:99px;padding:7px 14px}.tab.on{background:#fbbf24;color:#1a1204;border-color:#fbbf24;font-weight:700}.tab.add{border-style:dashed;color:var(--acc)}.tab.del{color:var(--warn)}
+.bar{height:10px;background:var(--line);border-radius:5px;overflow:hidden}.bar i{display:block;height:100%;background:var(--acc)}
+#quote{display:none}
+.q{background:#fff;color:#000;padding:18px;border:1px solid #999}
+.q table{min-width:0}.q th{background:#eee;color:#000}.q td,.q th{border:1px solid #999}
+.q input{background:transparent;color:#000;border:0;border-bottom:1px dashed #999;border-radius:0}
+@media print{body.pq #app{display:none}body.pq #quote{display:block}body.pq .noprint{display:none}body{background:#fff}.q{border:0}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#10224f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+</head>
+<body>
+<main id="app">
+<div class="hero"><div class="hrow"><div class="logo">▤</div><div><h1>منظومة سواعد الغد الحديثة</h1><span class="chip">● تطبيق متصل وجاهز</span><div style="font-size:.85rem">طرابلس - تاجوراء · 0914340100 - 0914340200</div>
+<p class="sub" id="sub">شركة سواعد الغد الحديثة · المورد Fales Grand · الفاتورة FALES-13-2026 · PHLORIDE · حاوية 20FT / 40HQ إلى مصراتة</p></div></div><div class="hbtns"><button class="b-ai" onclick="document.getElementById('invFile').click()">✦ إضافة فاتورة بصورة (AI)</button><button class="b-wa" onclick="shareWA()">واتساب</button><button class="b-q" onclick="openQuote()">عرض أسعار (طباعة / PDF)</button><button class="b-x" onclick="exportCSV()">Excel</button><button class="b-x" onclick="document.getElementById('ctrl').scrollIntoView()">⚙ الإعدادات</button><button class="b-i" onclick="installApp()">تثبيت التطبيق</button></div><div id="hm" class="hm"></div></div>
+<div id="tabs" class="tabs"></div>
+
+<section class="kpis">
+ <div class="kpi c c1"><small>قيمة الفاتورة FOB</small><b id="kFobU">$0</b><small id="kFobL">0 د.ل</small><small id="kAdv"></small></div>
+ <div class="kpi c c2"><small>إجمالي المصاريف الإضافية</small><b id="kExp">0 د.ل</b><small id="kExpR"></small></div>
+ <div class="kpi c c3"><small>التكلفة الكلية واصلة للمخزن</small><b id="kTot">0 د.ل</b><small id="kTotU"></small></div>
+ <div class="kpi c c4"><small>العدد الفعلي ووحدات الحيز</small><b id="kQty">0</b><small id="kSpace"></small></div>
+ <div class="kpi profit"><small>صافي الربح المتوقع</small><b id="kProfit">0 د.ل</b><small id="kSales"></small><small id="kRoi"></small></div>
+</section>
+
+<section class="two">
+ <div class="card"><b>أفضل الأصناف ربحًا</b><div id="chTop"></div></div>
+ <div class="card"><b>توزيع التكلفة الكلية</b><div id="chDonut" style="margin-top:10px"></div></div>
+</section>
+<section class="card"><b>آخر عروض الأسعار</b><div class="wrap"><table style="min-width:0"><thead><tr><th>رقم العرض</th><th>العميل</th><th>التاريخ</th><th>الأصناف</th></tr></thead><tbody id="qlog"></tbody></table></div></section>
+
+<section class="card" id="ctrl">
+ <div class="grid">
+  <div><label for="sname">اسم / رقم الفاتورة للتعريف</label><input id="sname"></div>
+  <div><label for="ssup">اسم المورد / المصنع</label><input id="ssup"></div>
+  <div><label for="rate">سعر الصرف (د.ل لكل دولار)</label><input id="rate" type="number" step="0.01" min="0.01" value="6.50"></div>
+  <div><label for="sea">الشحن البحري</label><div class="row"><input id="sea" type="number" min="0" value="0"><select id="seaC"><option value="USD">$</option><option value="LYD">د.ل</option></select></div><div class="hint" id="seaH"></div></div>
+  <div><label for="cus">التخليص الجمركي والميناء</label><div class="row"><input id="cus" type="number" min="0" value="0"><select id="cusC"><option value="LYD">د.ل</option><option value="USD">$</option></select></div><div class="hint" id="cusH"></div></div>
+  <div><label for="bank">عمولة التحويل أو الاعتماد (%)</label><input id="bank" type="number" step="0.1" min="0" value="0"><div class="hint" id="bankH"></div></div>
+  <div><label for="trans">النقل الداخلي للمخازن (د.ل)</label><input id="trans" type="number" min="0" value="0"></div>
+  <div><label for="labor">عمالة التفريغ والتستيف (د.ل)</label><input id="labor" type="number" min="0" value="0"></div>
+  <div><label for="other">مصاريف أخرى (د.ل)</label><input id="other" type="number" min="0" value="0"></div>
+  <div><label for="margin">هامش الربح (%)</label><input id="margin" type="number" step="0.5" min="0" value="15"><div class="hint">يطبَّق على الأصناف التي لم يُعدَّل سعرها يدويًا</div></div>
+  <div><label for="method">توزيع المصاريف حسب</label><select id="method"><option value="space">الحيز المكافئ</option><option value="fob">قيمة FOB</option><option value="qty">العدد الفعلي</option></select><div class="hint">150AH يأخذ حيز بطاريتين صغيرتين</div></div>
+ </div>
+ <div class="btns noprint" style="margin-top:12px"><button class="p" onclick="openQuote()">إصدار عرض أسعار للعميل</button><button class="p" onclick="document.getElementById('invFile').click()">إضافة فاتورة جديدة بالصورة (ذكاء اصطناعي)</button><input type="file" id="invFile" accept="image/*" hidden onchange="importInvoice(this)"><button id="undoBtn" class="x" style="display:none" onclick="undoImport()">تراجع عن الاستيراد</button><span class="hint" id="pdfH">عرض الأسعار يحتوي أسعار البيع فقط، بتاريخ إصداره.</span></div>
+</section>
+
+<section class="card">
+ <div class="wrap"><table>
+  <thead><tr><th>#</th><th>نوع البطارية</th><th>AH</th><th>الكمية</th><th>معامل الحيز</th><th>وحدات الحيز</th><th>نسبة الحيز</th><th>FOB للقطعة $</th><th>إجمالي FOB $</th><th>مصاريف القطعة د.ل</th><th>التكلفة الواصلة د.ل</th><th>سعر البيع د.ل</th><th>ربح الصنف د.ل</th><th></th></tr></thead>
+  <tbody id="rows"></tbody>
+ </table></div>
+ <div class="btns noprint"><button class="p" onclick="addRow()">إضافة صنف</button><button class="p" onclick="openQuote()">عرض أسعار للعميل</button><button onclick="resetAll()" class="x">مسح كل البيانات</button></div>
+ <div class="hint" id="saveH"></div>
+</section>
+
+<section class="card"><b>توزيع الحيز داخل الحاوية</b><div id="space" style="margin-top:8px"></div></section>
+</main>
+
+<section id="quote"><div class="q">
+ <div class="noprint btns" style="margin:0 0 12px"><button class="p" onclick="issuePDF()">تنزيل PDF</button><button class="p" onclick="shareQuote()">إرسال</button><span class="hint" id="qH" style="align-self:center"></span><button class="p" onclick="doPrint()">طباعة أو حفظ PDF</button><button onclick="closeQuote()">رجوع</button><label style="display:flex;gap:6px;align-items:center;margin:0"><input type="checkbox" id="showQ" checked onchange="renderQuote()" style="width:auto"> إظهار الكمية والإجمالي</label></div>
+ <div style="text-align:center"><h2 style="margin:0">شركة سواعد الغد الحديثة</h2><div>لاستيراد وتوزيع الإطارات والبطاريات</div><div>طريق الدائري الثاني تاجوراء، طرابلس، ليبيا · هاتف 0914340100 - 0914340200</div><h3>عرض أسعار</h3></div>
+ <p>السادة / العميل: <input id="qc" value="السادة المحترمون" style="width:60%"></p>
+ <p>رقم العرض: <input id="qn" value="QT-2026-001" style="width:30%"> التاريخ: <input id="qd" type="date" style="width:30%"></p>
+ <p>تحية طيبة، يسر الشركة أن تقدم لكم أسعار البطاريات الكورية PHLORIDE وفق الجدول التالي:</p>
+ <div class="wrap"><table id="qt"></table></div>
+ <p>الشروط: البطاريات أصلية الصنع، والأسعار بالدينار الليبي وقابلة للتغيير. صلاحية العرض: <input id="qv" value="7 أيام من تاريخه أو حتى نفاد الكمية" style="width:50%"></p>
+ <p style="margin-top:36px">اعتماد الإدارة / الختم والتوقيع: ______________</p>
+</div></section>
+
+<script>
+/* بديل خدمات Claude عند التشغيل كتطبيق مستقل */
+var __dp=null;
+window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();__dp=e});
+if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
+async function __gem(prompt,blob){
+ var key=localStorage.getItem("gkey");
+ if(!key){key=window.prompt("لقراءة الفاتورة بالذكاء الاصطناعي الصق مفتاح Gemini API (يُحفظ على جهازك فقط):");if(!key)throw {code:"not_granted"};localStorage.setItem("gkey",key.trim())}
+ var b64=await new Promise(function(r){var fr=new FileReader();fr.onload=function(){r(fr.result.split(",")[1])};fr.readAsDataURL(blob)});
+ var model=localStorage.getItem("gmodel")||"gemini-2.5-flash";
+ var res=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+model+":generateContent?key="+encodeURIComponent(localStorage.getItem("gkey")),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:[{text:prompt},{inlineData:{mimeType:blob.type||"image/jpeg",data:b64}}]}],generationConfig:{responseMimeType:"application/json"}})});
+ var j=await res.json();
+ if(!res.ok){if(res.status==400||res.status==403)localStorage.removeItem("gkey");throw {code:"api",message:(j.error&&j.error.message)||""}}
+ return JSON.parse(j.candidates[0].content.parts[0].text.replace(/```json|```/g,"").trim());
+}
+window.claude={use:async function(n){
+ if(n==="downloads")return {save:async function(o){var b=(o.data instanceof Blob)?o.data:new Blob([o.data]);var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=o.filename;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1500);return {status:"saved"}}};
+ if(n==="sample"){var f=async function(){throw {code:"unavailable"}};f.json=function(p,o){return __gem(p,(o&&o.images&&o.images[0])||null)};return f}
+ return null}};
+</script>
+<script>
+
+var KEY="battery-costing-v2";
+var DEF={rate:6.5,sea:0,seaC:"USD",cus:0,cusC:"LYD",bank:0,trans:0,labor:0,other:0,margin:15,method:"space",
+items:[{n:"MF55D23L",ah:60,q:132,f:1,p:34.9306,s:null},{n:"MF95D31L NX120-7L",ah:80,q:108,f:1,p:44.2487,s:null},{n:"MF80D26L NX110-5L",ah:70,q:480,f:1,p:40.5097,s:null},{n:"MF160G51L N150L",ah:150,q:40,f:2,p:83.7045,s:null},{n:"MF55559",ah:55,q:396,f:1,p:33.1812,s:null},{n:"MF105D31L",ah:90,q:108,f:1,p:48.7357,s:null},{n:"MF60044",ah:100,q:90,f:1,p:57.4171,s:null}]};
+var SKEY="battery-ships-v1",ALL=null;
+var S=load();
+function clone(o){return JSON.parse(JSON.stringify(o))}
+function load(){
+ try{var a=localStorage.getItem(SKEY);if(a){ALL=JSON.parse(a);if(ALL&&ALL.data&&ALL.data[ALL.cur])return ALL.data[ALL.cur]}}catch(e){}
+ var first=clone(DEF);
+ try{var t=localStorage.getItem(KEY);if(t)first=JSON.parse(t)}catch(e){}
+ first.name=first.name||"FALES-13-2026 (بطاريات)";
+ ALL={cur:"s1",order:["s1"],data:{s1:first}};return first}
+function save(){try{ALL.data[ALL.cur]=S;localStorage.setItem(SKEY,JSON.stringify(ALL));g("saveH").textContent="تُحفظ التعديلات تلقائيًا في هذا المتصفح."}catch(e){g("saveH").textContent="تعذر الحفظ التلقائي في هذا المتصفح."}}
+function g(i){return document.getElementById(i)}
+function num(v){v=parseFloat(v);return isFinite(v)?v:0}
+function f2(x){return x.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function f0(x){return x.toLocaleString("en-US",{maximumFractionDigits:0})}
+var F=["rate","sea","seaC","cus","cusC","bank","trans","labor","other","margin","method"];
+F.forEach(function(k){var e=g(k);e.value=S[k];e.addEventListener("input",function(){S[k]=(e.type=="number")?num(e.value):e.value;calc()})});
+
+function buildRows(){
+ g("rows").innerHTML=S.items.map(function(it,i){
+  return '<tr><td>'+(i+1)+'</td>'+
+  '<td class="name"><input value="'+esc(it.n)+'" oninput="S.items['+i+'].n=this.value;calc()"></td>'+
+  '<td><input type="number" value="'+it.ah+'" oninput="S.items['+i+'].ah=num(this.value);calc()"></td>'+
+  '<td><input type="number" value="'+it.q+'" oninput="S.items['+i+'].q=num(this.value);calc()"></td>'+
+  '<td><input type="number" step="0.5" value="'+it.f+'" oninput="S.items['+i+'].f=num(this.value);calc()"></td>'+
+  '<td id="u'+i+'"></td><td id="pc'+i+'"></td>'+
+  '<td><input type="number" step="0.01" value="'+it.p+'" oninput="S.items['+i+'].p=num(this.value);calc()"></td>'+
+  '<td id="ft'+i+'"></td><td id="ex'+i+'"></td><td id="ld'+i+'"></td>'+
+  '<td><input type="number" step="0.01" id="sp'+i+'" value="'+(it.s===null?"":it.s)+'" placeholder="تلقائي" oninput="S.items['+i+'].s=this.value===\'\'?null:num(this.value);calc()"></td>'+
+  '<td id="pr'+i+'"></td><td><button class="x" onclick="delRow('+i+')">حذف</button></td></tr>'}).join("");
+ calc()}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;")}
+function addRow(){S.items.push({n:"",ah:0,q:0,f:1,p:0,s:null});buildRows()}
+function delRow(i){S.items.splice(i,1);buildRows()}
+function resetAll(){if(confirm("سيتم مسح كل الأصناف والمصاريف. هل تريد المتابعة؟")){S=JSON.parse(JSON.stringify(DEF));F.forEach(function(k){g(k).value=S[k]});buildRows()}}
+
+function calc(){
+ var r=S.rate>0?S.rate:1;
+ var fobU=0,qty=0,sp=0;
+ S.items.forEach(function(it){fobU+=it.q*it.p;qty+=it.q;sp+=it.q*it.f});
+ var fobL=fobU*r;
+ var sea=S.seaC=="USD"?S.sea*r:S.sea, cus=S.cusC=="USD"?S.cus*r:S.cus, bank=fobL*S.bank/100;
+ var exp=sea+cus+bank+S.trans+S.labor+S.other;
+ EXPB={fob:fobL,sea:sea,cus:cus,bank:bank,trans:S.trans,labor:S.labor,other:S.other};
+ g("seaH").textContent="المعادل: "+f2(sea)+" د.ل";g("cusH").textContent="المعادل: "+f2(cus)+" د.ل";g("bankH").textContent="القيمة: "+f2(bank)+" د.ل";
+ var tw=S.method=="space"?sp:S.method=="fob"?fobU:qty, cost=0,sales=0;
+ S.items.forEach(function(it,i){
+  var u=it.q*it.f,ft=it.q*it.p,w=S.method=="space"?u:S.method=="fob"?ft:it.q;
+  var exU=(tw>0&&it.q>0)?exp*(w/tw)/it.q:0, ld=it.p*r+exU;
+  var sell=it.s===null?Math.round(ld*(1+S.margin/100)*100)/100:it.s;
+  cost+=ld*it.q;sales+=sell*it.q;it._ld=ld;it._ex=exU;
+  g("u"+i).textContent=f0(u);g("pc"+i).textContent=(sp>0?(u/sp*100).toFixed(1):"0.0")+"%";
+  g("ft"+i).textContent=f2(ft);g("ex"+i).textContent=f2(exU);g("ld"+i).textContent=f2(ld);
+  g("sp"+i).placeholder=f2(sell);g("pr"+i).textContent=f2((sell-ld)*it.q);
+  it._sell=sell});
+ g("kFobU").textContent="$"+f2(fobU);g("kFobL").textContent=f2(fobL)+" د.ل";
+ g("kAdv").textContent="مقدم 30%: $"+f2(fobU*.3)+" · بوليصة 70%: $"+f2(fobU*.7);
+ g("kExp").textContent=f2(exp)+" د.ل";g("kExpR").textContent="نسبة المصاريف للفاتورة: "+(fobL>0?(exp/fobL*100).toFixed(1):"0.0")+"%";
+ g("kTot").textContent=f2(cost)+" د.ل";g("kTotU").textContent="ما يعادل $"+f2(cost/r);
+ g("kQty").textContent=f0(qty)+" بطارية";g("kSpace").textContent="إجمالي الحيز: "+f0(sp)+" وحدة";
+ g("kProfit").textContent=f2(sales-cost)+" د.ل";g("kSales").textContent="إجمالي المبيعات: "+f2(sales)+" د.ل";
+ g("kRoi").textContent="العائد على التكلفة: "+(cost>0?((sales-cost)/cost*100).toFixed(1):"0.0")+"%";
+ g("space").innerHTML=S.items.map(function(it){var u=it.q*it.f,p=sp>0?u/sp*100:0;
+  return '<div style="margin-bottom:8px"><div style="font-size:.85rem">'+esc(it.n||"صنف بلا اسم")+' ('+f0(it.q)+' بطارية) = '+f0(u)+' وحدة حيز · '+p.toFixed(1)+'%</div><div class="bar"><i style="width:'+p+'%"></i></div></div>'}).join("");
+ dash();save()}
+
+function openQuote(){g("quote").style.display="block";g("app").style.display="none";g("qd").value=new Date().toLocaleDateString("en-CA");renderQuote();window.scrollTo(0,0)}
+function closeQuote(){g("quote").style.display="";g("app").style.display=""}
+function renderQuote(){
+ var sh=g("showQ").checked;
+ g("qt").innerHTML='<tr><th>م</th><th>النوع</th><th>السعة AH</th><th>العلامة والمنشأ</th><th>سعر القطعة د.ل</th>'+(sh?'<th>الكمية</th><th>الإجمالي د.ل</th>':'')+'</tr>'+
+ S.items.map(function(it,i){var s=it._sell||0;return '<tr><td>'+(i+1)+'</td><td>'+esc(it.n)+'</td><td>12V.'+it.ah+'AH</td><td>PHLORIDE - كوريا</td><td>'+f2(s)+'</td>'+(sh?'<td>'+f0(it.q)+'</td><td>'+f2(s*it.q)+'</td>':'')+'</tr>'}).join("")}
+function doPrint(){logQuote();document.body.classList.add("pq");try{window.print()}catch(e){alert("الطباعة غير متاحة هنا. افتح الصفحة في المتصفح مباشرة.")}setTimeout(function(){document.body.classList.remove("pq")},500)}
+function pdfHTML(){
+ var td='border:1px solid #999;padding:9px 6px;text-align:center;font-size:14px';
+ var th='background:#0f4c5c;color:#fff;padding:9px 6px;border:1px solid #0f4c5c;font-size:14px';
+ var rows=S.items.map(function(it,i){return '<tr><td style="'+td+'">'+(i+1)+'</td><td style="'+td+';direction:ltr;font-weight:700">'+esc(it.n)+'</td><td style="'+td+'">12V.'+it.ah+'AH</td><td style="'+td+'">PHLORIDE<br>كوريا</td><td style="'+td+';font-weight:700;color:#0f4c5c">'+f2(it._sell||0)+'</td></tr>'}).join("");
+ var d=g("qd").value||new Date().toISOString().slice(0,10);
+ return '<div style="text-align:center;border-bottom:3px solid #0f4c5c;padding-bottom:10px"><div style="font-size:26px;font-weight:700;color:#0f4c5c">شركة سواعد الغد الحديثة</div><div style="font-size:13px">لاستيراد وتوزيع الإطارات والبطاريات</div><div style="font-size:12px;direction:ltr">SAWED ALGHAD ALHADITHA COMPANY</div><div style="font-size:12px">طريق الدائري الثاني تاجوراء، طرابلس - ليبيا · هاتف: 0914340100 - 0914340200</div></div>'+
+ '<div style="text-align:center;margin:18px 0"><span style="background:#0f4c5c;color:#fff;padding:6px 30px;font-size:18px;font-weight:700">عرض أسعار</span></div>'+
+ '<table style="width:100%;font-size:14px;margin-bottom:12px"><tr><td>السادة / العميل: <b>'+esc(g("qc").value||"السادة المحترمون")+'</b></td><td>رقم عرض السعر: <b>'+esc(g("qn").value||"")+'</b></td></tr><tr><td></td><td>التاريخ: <b>'+esc(d)+'</b></td></tr></table>'+
+ '<p style="font-size:14px;line-height:1.9;margin:8px 0">تحية طيبة وبعد،، يسر شركة سواعد الغد الحديثة أن تتقدم لسيادتكم بعرض أسعار البطاريات الكورية عالية الجودة علامة (PHLORIDE - MADE IN KOREA) وفقاً للأسعار الموضحة أدناه:</p>'+
+ '<table style="width:100%;border-collapse:collapse"><tr><th style="'+th+'">م</th><th style="'+th+'">نوع / موديل البطارية</th><th style="'+th+'">السعة</th><th style="'+th+'">العلامة والمنشأ</th><th style="'+th+'">سعر البيع للقطعة (د.ل)</th></tr>'+rows+'</table>'+
+ '<div style="margin-top:20px;font-size:13px;line-height:2"><b style="color:#0f4c5c">الشروط والملاحظات:</b><br>• جميع البطاريات أصلية الصنع - صنع في كوريا.<br>• الأسعار بالدينار الليبي وهي قابلة للتغيير.<br>• صلاحية العرض: '+esc(g("qv").value||"7 أيام من تاريخه أو حتى نفاد الكمية")+'</div>'+
+ '<table style="width:100%;margin-top:50px;font-size:13px;text-align:center"><tr><td>شركة سواعد الغد الحديثة<br>طرابلس - ليبيا</td><td>اعتماد الإدارة / الختم والتوقيع<br><br>..............................</td></tr></table>';
+}
+async function issuePDFOld(){
+ var h=g("pdfH");
+ if(typeof html2pdf==="undefined"){h.textContent="تعذر تحميل مكتبة PDF. تأكد من الاتصال بالإنترنت ثم أعد فتح الصفحة.";return}
+ var dl=null;try{dl=await window.claude.use("downloads")}catch(e){}
+ if(!dl){h.textContent="حفظ الملفات غير متاح في هذا العرض. .";return}
+ h.textContent="جارٍ إنشاء الملف...";
+ var box=document.createElement("div");
+ box.style.cssText="position:fixed;left:-10000px;top:0;width:794px;background:#fff;color:#111;padding:36px;direction:rtl;font-family:inherit";
+ box.innerHTML=pdfHTML();document.body.appendChild(box);
+ try{
+  var blob=await html2pdf().set({margin:0,image:{type:"jpeg",quality:0.95},html2canvas:{scale:2,backgroundColor:"#ffffff"},jsPDF:{unit:"pt",format:"a4"}}).from(box).outputPdf("blob");
+  await dl.save({filename:"Quotation-"+((g("qn").value||"QT").replace(/[^A-Za-z0-9-]/g,""))+".pdf",data:blob});
+  h.textContent="تم إصدار عرض الأسعار.";
+ }catch(e){h.textContent=(e&&e.code==="declined")?"أُلغي الحفظ.":"تعذر إنشاء الملف. حاول مرة أخرى."}
+ box.remove();
+}
+function say(t){g("qH").textContent=t;g("pdfH").textContent=t;g("hm").textContent=t}
+function fname(){return "Quotation-"+((g("qn").value||"QT").replace(/[^A-Za-z0-9-]/g,""))+".pdf"}
+async function quoteBlob(){
+ if(typeof html2pdf==="undefined")throw {code:"nolib"};
+ var box=document.createElement("div");
+ box.style.cssText="position:fixed;left:-10000px;top:0;width:794px;background:#fff;color:#111;padding:36px;direction:rtl;font-family:inherit";
+ box.innerHTML=pdfHTML();document.body.appendChild(box);
+ try{return await html2pdf().set({margin:0,image:{type:"jpeg",quality:0.95},html2canvas:{scale:2,backgroundColor:"#ffffff"},jsPDF:{unit:"pt",format:"a4"}}).from(box).outputPdf("blob")}finally{box.remove()}
+}
+function why(e){return e&&e.code==="nolib"?"تعذر تحميل مكتبة PDF (تحتاج إنترنت). استخدم زر الطباعة ثم اختر حفظ PDF.":(e&&e.code==="declined")?"أُلغي الحفظ.":"تعذر إنشاء الملف. جرّب زر الطباعة."}
+async function saveBlob(blob){
+ var dl=null;try{dl=await window.claude.use("downloads")}catch(e){}
+ if(!dl)throw {code:"nodl"};
+ await dl.save({filename:fname(),data:blob});
+}
+async function issuePDF(){
+ say("جارٍ إنشاء الملف...");
+ try{var b=await quoteBlob();await saveBlob(b);logQuote();say("تم إصدار عرض الأسعار.")}
+ catch(e){say(e&&e.code==="nodl"?"الحفظ غير متاح هنا. جرّب زر الإرسال أو الطباعة.":why(e))}
+}
+async function shareQuote(){
+ say("جارٍ تجهيز الملف...");
+ try{
+  var b=await quoteBlob(),f=new File([b],fname(),{type:"application/pdf"});
+  if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:"عرض أسعار"});logQuote();say("تمت المشاركة.")}
+  else{await saveBlob(b);logQuote();say("تم حفظ الملف، أرسله من هاتفك.")}
+ }catch(e){say(e&&e.name==="AbortError"?"أُلغيت المشاركة.":(e&&e.code==="nodl"?"الإرسال غير متاح هنا. استخدم الطباعة.":why(e)))}
+}
+function setSub(){var m=S.meta||{};g("sub").textContent="الشحنة النشطة: "+(S.name||"-")+(m.supplier?" · المورد "+m.supplier:"")+(m.brand?" · "+m.brand:"")+(m.container?" · "+m.container:"")}
+async function shrink(f){
+ try{var bm=await createImageBitmap(f),k=Math.min(1,1800/Math.max(bm.width,bm.height)),c=document.createElement("canvas");c.width=Math.round(bm.width*k);c.height=Math.round(bm.height*k);c.getContext("2d").drawImage(bm,0,0,c.width,c.height);
+  return await new Promise(function(r){c.toBlob(function(b){r(b||f)},"image/jpeg",0.85)})}catch(e){return f}
+}
+var UNDO=null;
+async function importInvoice(inp){
+ var f=inp.files&&inp.files[0];inp.value="";if(!f)return;
+ var sm=null;try{sm=await window.claude.use("sample")}catch(e){}
+ if(!sm){say("ميزة الذكاء الاصطناعي غير متاحة هنا. .");return}
+ say("جارٍ قراءة الفاتورة، قد يستغرق ذلك دقيقة...");
+ var P='اقرأ صورة فاتورة المورد المرفقة لشحنة بطاريات. أعد JSON فقط بهذا الشكل: {"invoice":"رقم الفاتورة","supplier":"اسم المورد","brand":"الماركة والمنشأ","container":"نوع الحاوية","items":[{"n":"موديل البطارية كما في الفاتورة","ah":سعة الأمبير رقمًا,"q":الكمية رقمًا,"p":سعر القطعة الواحدة بالدولار رقمًا}]}. إن كانت الفاتورة تعرض إجمالي السطر فقط فاقسمه على الكمية. لا تخمّن أرقامًا غير ظاهرة؛ ضع null للقيمة غير الواضحة.';
+ try{
+  var img=await shrink(f);
+  var d=await sm.json(P,{images:[img],cache:false});
+  var items=((d&&d.items)||[]).filter(function(x){return x&&x.n&&x.q>0}).map(function(x){var ah=num(x.ah);return {n:String(x.n),ah:ah,q:num(x.q),f:ah>=150?2:1,p:num(x.p),s:null}});
+  if(!items.length){say("لم أجد أصنافًا واضحة في الصورة. جرّب صورة أوضح.");return}
+  UNDO={items:S.items,meta:S.meta};
+  S.items=items;S.name=d.invoice||S.name;S.meta={invoice:d.invoice||"",supplier:d.supplier||"",brand:d.brand||"",container:d.container||""};
+  buildRows();setSub();renderTabs();g("sname").value=S.name||"";g("ssup").value=S.meta.supplier||"";g("undoBtn").style.display="";
+  say("تمت إضافة "+items.length+" صنف من الفاتورة. راجع الكميات والأسعار قبل الاعتماد.");
+ }catch(e){say(e&&e.code==="not_granted"?"لم تسمح بتشغيل الذكاء الاصطناعي.":"تعذرت قراءة الفاتورة. حاول مرة أخرى بصورة أوضح.")}
+}
+function undoImport(){if(!UNDO)return;S.items=UNDO.items;S.meta=UNDO.meta;UNDO=null;buildRows();if(S.meta)setSub();g("undoBtn").style.display="none";say("تم التراجع.")}
+var EXPB={};
+function dash(){
+ var arr=S.items.filter(function(it){return it._ld!==undefined}).map(function(it){return {n:it.n||'-',v:((it._sell||0)-(it._ld||0))*it.q}}).sort(function(a,b){return b.v-a.v}).slice(0,6);
+ var mx=Math.max.apply(null,arr.map(function(a){return a.v}).concat([1]));
+ g('chTop').innerHTML=arr.map(function(a){return '<div style="margin:8px 0"><div style="display:flex;justify-content:space-between;font-size:.8rem"><span dir="ltr">'+esc(a.n)+'</span><b>'+f0(a.v)+' د.ل</b></div><div class="bar"><i style="width:'+Math.max(0,a.v/mx*100)+'%;background:#d49a1f"></i></div></div>'}).join('');
+ var parts=[['قيمة البضاعة',EXPB.fob,'#0f6b63'],['الشحن البحري',EXPB.sea,'#2563eb'],['التخليص',EXPB.cus,'#d49a1f'],['عمولة التحويل',EXPB.bank,'#7c3aed'],['النقل والتفريغ',(EXPB.trans||0)+(EXPB.labor||0),'#dc2626'],['أخرى',EXPB.other,'#64748b']].filter(function(p){return p[1]>0});
+ if(!parts.length){g('chDonut').textContent='أدخل أسعار الأصناف لعرض التوزيع.';return}
+ var tot=parts.reduce(function(s,p){return s+p[1]},0),acc=0;
+ var stops=parts.map(function(p){var a=acc/tot*100;acc+=p[1];return p[2]+' '+a+'% '+(acc/tot*100)+'%'}).join(',');
+ g('chDonut').innerHTML='<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><div style="width:130px;height:130px;border-radius:50%;background:conic-gradient('+stops+');display:grid;place-items:center"><div style="width:76px;height:76px;border-radius:50%;background:var(--card)"></div></div><div style="font-size:.8rem;line-height:1.9">'+parts.map(function(p){return '<div><span style="display:inline-block;width:10px;height:10px;background:'+p[2]+';border-radius:2px;margin-left:6px"></span>'+p[0]+' '+(p[1]/tot*100).toFixed(1)+'%</div>'}).join('')+'</div></div>';
+}
+function logQuote(){S.qlog=S.qlog||[];S.qlog.unshift({no:g('qn').value,c:g('qc').value,d:g('qd').value,n:S.items.length});S.qlog=S.qlog.slice(0,8);save();renderLog()}
+function renderLog(){var q=S.qlog||[];g('qlog').innerHTML=q.length?q.map(function(x){return '<tr><td>'+esc(x.no||'')+'</td><td>'+esc(x.c||'')+'</td><td>'+esc(x.d||'')+'</td><td>'+x.n+'</td></tr>'}).join(''):'<tr><td colspan="4" style="text-align:center;color:var(--mute)">لا توجد عروض صدرت بعد</td></tr>'}
+function renderTabs(){
+ g('tabs').innerHTML=ALL.order.map(function(id){var n=ALL.data[id].name||'فاتورة';return '<button class="tab'+(id===ALL.cur?' on':'')+'" onclick="sw(\''+id+'\')">'+esc(n)+'</button>'}).join('')+'<button class="tab add" onclick="newShip()">+ فاتورة فارغة جديدة</button>'+(ALL.order.length>1?'<button class="tab del" id="delB" onclick="delShip()">حذف الحالية</button>':'')}
+function applyS(){F.forEach(function(k){g(k).value=S[k]});g('sname').value=S.name||'';g('ssup').value=(S.meta&&S.meta.supplier)||'';buildRows();setSub();renderLog();renderTabs()}
+function sw(id){save();ALL.cur=id;S=ALL.data[id];applyS()}
+function newShip(){save();var id='s'+Date.now(),n=clone(DEF);n.items=[];n.name='فاتورة جديدة';n.rate=S.rate;ALL.order.push(id);ALL.data[id]=n;ALL.cur=id;S=n;applyS();save()}
+function delShip(){var b=g('delB');if(!b.dataset.c){b.dataset.c=1;b.textContent='اضغط للتأكيد';return}var i=ALL.order.indexOf(ALL.cur);delete ALL.data[ALL.cur];ALL.order.splice(i,1);ALL.cur=ALL.order[0];S=ALL.data[ALL.cur];applyS();save()}
+g('sname').addEventListener('input',function(){S.name=this.value;save();renderTabs();setSub()});
+g('ssup').addEventListener('input',function(){S.meta=S.meta||{};S.meta.supplier=this.value;setSub();save()});
+function waText(){var t='عرض أسعار - شركة سواعد الغد الحديثة\n'+new Date().toLocaleDateString('en-CA')+'\n\n';S.items.forEach(function(it){t+=(it.n||'-')+' (12V.'+it.ah+'AH): '+f2(it._sell||0)+' د.ل\n'});return t+'\nالأسعار بالدينار الليبي وقابلة للتغيير.\nهاتف: 0914340100'}
+async function shareWA(){var t=waText();
+ try{if(navigator.share){await navigator.share({text:t});logQuote();return}}catch(e){if(e&&e.name==='AbortError')return}
+ try{window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank')}catch(e){}
+ try{await navigator.clipboard.writeText(t);say('نُسخت الرسالة، إن لم يفتح واتساب الصقها فيه.')}catch(e){say('تعذر فتح واتساب من هنا.')}}
+async function exportCSV(){
+ var rows=[['الصنف','السعة AH','الكمية','وحدات الحيز','FOB للقطعة $','مصاريف القطعة د.ل','التكلفة الواصلة د.ل','سعر البيع د.ل','الربح د.ل']];
+ S.items.forEach(function(it){var ld=it._ld||0,s=it._sell||0;rows.push([it.n,it.ah,it.q,it.q*it.f,it.p,(it._ex||0).toFixed(2),ld.toFixed(2),s.toFixed(2),((s-ld)*it.q).toFixed(2)])});
+ var csv='\ufeff'+rows.map(function(r){return r.map(function(c){return '"'+String(c).replace(/"/g,'""')+'"'}).join(',')}).join('\r\n');
+ var dl=null;try{dl=await window.claude.use('downloads')}catch(e){}
+ if(!dl){say('الحفظ غير متاح هنا.');return}
+ try{await dl.save({filename:'Shipment-'+((S.name||'').replace(/[^A-Za-z0-9-]/g,'')||'export')+'.csv',data:csv});say('تم تصدير الملف، افتحه بـ Excel.')}catch(e){say(e&&e.code==='declined'?'أُلغي الحفظ.':'تعذر التصدير.')}}
+function installApp(){if(__dp){__dp.prompt();return}say('لتثبيته كتطبيق: من قائمة المتصفح (⋮) اختر «إضافة إلى الشاشة الرئيسية».')}
+renderLog();
+g('sname').value=S.name||'';g('ssup').value=(S.meta&&S.meta.supplier)||'';renderTabs();
+setSub();
+buildRows();
+</script>
+</body>
+</html>
