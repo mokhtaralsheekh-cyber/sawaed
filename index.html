@@ -1,335 +1,832 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>منظومة تسعير شحنات البطاريات</title>
-<style>
-:root{--bg:#f2f5f4;--card:#fff;--ink:#13222d;--mute:#5d6c76;--line:#d5dedb;--acc:#0f6b63;--accbg:#e1f1ee;--warn:#b45309;--good:#15803d;
-box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a20;--card:#17262e;--ink:#e6eeee;--mute:#9db0b5;--line:#2b404a;--acc:#4fd1c0;--accbg:#173a3a;--warn:#f0a850;--good:#6ee7a0}}
-*{box-sizing:inherit}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,"Noto Naskh Arabic","Noto Sans Arabic",Arial,sans-serif;line-height:1.6}
-main{max-width:1100px;margin:0 auto;padding:14px}
-h1{font-size:1.25rem;margin:0}
-.sub{color:var(--mute);font-size:.85rem;margin:2px 0 14px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:14px}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:14px}
-.kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
-.kpi small{color:var(--mute);display:block}
-.kpi b{font-size:1.3rem;font-variant-numeric:tabular-nums;display:block}
-.kpi.profit{background:var(--accbg);border-color:var(--acc)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
-label{display:block;font-size:.8rem;color:var(--mute);margin-bottom:3px}
-input,select{width:100%;font:inherit;padding:7px 9px;border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--ink);font-variant-numeric:tabular-nums}
-input:focus,select:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
-.row{display:flex;gap:6px}.row select{width:auto}
-.hint{font-size:.75rem;color:var(--mute);margin-top:3px}
-.wrap{overflow-x:auto}
-table{border-collapse:collapse;width:100%;min-width:900px;font-size:.85rem}
-th,td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
-th{color:var(--mute);font-weight:600;background:var(--bg)}
-td input{min-width:70px;padding:4px 6px}
-td.name input{min-width:150px}
-.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-button{font:inherit;cursor:pointer;border-radius:8px;padding:8px 14px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
-button.p{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:700}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button.p{color:#06201c}}
-button.x{color:var(--warn)}
-.kpi.c{color:#fff;border:0}.kpi.c small{color:rgba(255,255,255,.85)}.c1{background:linear-gradient(135deg,#a9791f,#d4a24a)}.c2{background:linear-gradient(135deg,#b4531a,#e07b39)}.c3{background:linear-gradient(135deg,#4338ca,#6d5ce6)}.c4{background:linear-gradient(135deg,#6d28d9,#8b5cf6)}.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:14px}.two .card{margin:0}
-.hero{background:linear-gradient(160deg,#10224f,#050a1c);color:#fff;border-radius:16px;padding:16px;margin-bottom:12px}.hero h1{color:#fff}.hrow{display:flex;gap:12px;align-items:flex-start}.logo{background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:14px;width:52px;height:52px;display:grid;place-items:center;font-size:24px;flex:none}.chip{display:inline-block;font-size:.75rem;color:#34d399;border:1px solid #1f6f5a;background:#0b2a2a;border-radius:99px;padding:2px 10px;margin:4px 0}.hero .sub{color:#9fe0ff;margin:4px 0 0}.hbtns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.hbtns button{border:0;font-weight:700;color:#fff;padding:10px 14px}.b-ai{background:linear-gradient(90deg,#2563eb,#7c3aed)}.b-wa{background:#059669}.b-q{background:#f59e0b;color:#1a1204!important}.b-x{background:#1e293b;border:1px solid #334155!important}.b-i{background:#fbbf24;color:#1a1204!important}.hm{margin-top:8px;font-size:.8rem;color:#cbd5e1;min-height:1em}.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:10px}.tab{white-space:nowrap;border-radius:99px;padding:7px 14px}.tab.on{background:#fbbf24;color:#1a1204;border-color:#fbbf24;font-weight:700}.tab.add{border-style:dashed;color:var(--acc)}.tab.del{color:var(--warn)}
-.bar{height:10px;background:var(--line);border-radius:5px;overflow:hidden}.bar i{display:block;height:100%;background:var(--acc)}
-#quote{display:none}
-.q{background:#fff;color:#000;padding:18px;border:1px solid #999}
-.q table{min-width:0}.q th{background:#eee;color:#000}.q td,.q th{border:1px solid #999}
-.q input{background:transparent;color:#000;border:0;border-bottom:1px dashed #999;border-radius:0}
-@media print{body.pq #app{display:none}body.pq #quote{display:block}body.pq .noprint{display:none}body{background:#fff}.q{border:0}}
-</style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#10224f">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="icon" href="icon-192.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="سواعد الغد - بطاريات">
+    <title>منظومة تسعير البطاريات - سواعد الغد (PWA)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
+        input[type="number"] { direction: ltr; text-align: center; }
+        .tab-active { background: #f59e0b; color: #090d16; font-weight: 800; }
+        .tab-inactive { background: #1e293b; color: #cbd5e1; }
+        @media print {
+            .no-print { display: none !important; }
+            body { background: #ffffff !important; color: #000000 !important; padding: 0 !important; margin: 0 !important; }
+            #printQuoteSection { display: block !important; box-shadow: none !important; border: none !important; padding: 10px !important; margin: 0 !important; }
+            @page { size: A4 portrait; margin: 10mm; }
+        }
+    </style>
 </head>
-<body>
-<main id="app">
-<div class="hero"><div class="hrow"><div class="logo">▤</div><div><h1>منظومة سواعد الغد الحديثة</h1><span class="chip">● تطبيق متصل وجاهز</span><div style="font-size:.85rem">طرابلس - تاجوراء · 0914340100 - 0914340200</div>
-<p class="sub" id="sub">شركة سواعد الغد الحديثة · المورد Fales Grand · الفاتورة FALES-13-2026 · PHLORIDE · حاوية 20FT / 40HQ إلى مصراتة</p></div></div><div class="hbtns"><button class="b-ai" onclick="document.getElementById('invFile').click()">✦ إضافة فاتورة بصورة (AI)</button><button class="b-wa" onclick="shareWA()">واتساب</button><button class="b-q" onclick="openQuote()">عرض أسعار (طباعة / PDF)</button><button class="b-x" onclick="exportCSV()">Excel</button><button class="b-x" onclick="document.getElementById('ctrl').scrollIntoView()">⚙ الإعدادات</button><button class="b-i" onclick="installApp()">تثبيت التطبيق</button></div><div id="hm" class="hm"></div></div>
-<div id="tabs" class="tabs"></div>
+<body class="bg-slate-950 text-slate-100 min-h-screen pb-12">
 
-<section class="kpis">
- <div class="kpi c c1"><small>قيمة الفاتورة FOB</small><b id="kFobU">$0</b><small id="kFobL">0 د.ل</small><small id="kAdv"></small></div>
- <div class="kpi c c2"><small>إجمالي المصاريف الإضافية</small><b id="kExp">0 د.ل</b><small id="kExpR"></small></div>
- <div class="kpi c c3"><small>التكلفة الكلية واصلة للمخزن</small><b id="kTot">0 د.ل</b><small id="kTotU"></small></div>
- <div class="kpi c c4"><small>العدد الفعلي ووحدات الحيز</small><b id="kQty">0</b><small id="kSpace"></small></div>
- <div class="kpi profit"><small>صافي الربح المتوقع</small><b id="kProfit">0 د.ل</b><small id="kSales"></small><small id="kRoi"></small></div>
-</section>
+    <!-- الهيدر الرئيسي -->
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-30 shadow-xl no-print">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+                <div class="bg-amber-500 text-slate-950 font-black px-3 py-1.5 rounded-xl text-base sm:text-lg shadow">سواعد الغد</div>
+                <div>
+                    <h1 class="text-sm sm:text-base font-extrabold text-white leading-tight">منظومة تسعير البطاريات (توزيع حسب الأمبير Ah)</h1>
+                    <p class="text-[11px] text-slate-400">شركة سواعد الغد الحديثة للإطارات والنضائد</p>
+                </div>
+            </div>
 
-<section class="two">
- <div class="card"><b>أفضل الأصناف ربحًا</b><div id="chTop"></div></div>
- <div class="card"><b>توزيع التكلفة الكلية</b><div id="chDonut" style="margin-top:10px"></div></div>
-</section>
-<section class="card"><b>آخر عروض الأسعار</b><div class="wrap"><table style="min-width:0"><thead><tr><th>رقم العرض</th><th>العميل</th><th>التاريخ</th><th>الأصناف</th></tr></thead><tbody id="qlog"></tbody></table></div></section>
+            <div class="flex items-center gap-1.5 flex-wrap">
+                <button type="button" onclick="createNewShipment()" class="bg-amber-500 active:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs sm:text-sm shadow">＋ شحنة جديدة</button>
+                <button type="button" onclick="triggerAI()" class="bg-indigo-600 active:bg-indigo-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs sm:text-sm shadow">🤖 قراءة فاتورة AI</button>
+                <input type="file" id="aiFile" accept="image/*" class="hidden" onchange="processAIFile(event)">
+                <button type="button" onclick="openModal('catalogModal')" class="bg-sky-700 active:bg-sky-600 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs sm:text-sm">📚 القاعدة</button>
+                <button type="button" onclick="openModal('settingsModal')" class="bg-slate-800 border border-slate-700 text-slate-200 px-2.5 py-1.5 rounded-lg text-xs sm:text-sm">⚙️</button>
+                <button type="button" onclick="downloadBackup()" class="bg-emerald-700 active:bg-emerald-600 text-white px-2.5 py-1.5 rounded-lg text-xs sm:text-sm">💾</button>
+            </div>
+        </div>
 
-<section class="card" id="ctrl">
- <div class="grid">
-  <div><label for="sname">اسم / رقم الفاتورة للتعريف</label><input id="sname"></div>
-  <div><label for="ssup">اسم المورد / المصنع</label><input id="ssup"></div>
-  <div><label for="rate">سعر الصرف (د.ل لكل دولار)</label><input id="rate" type="number" step="0.01" min="0.01" value="6.50"></div>
-  <div><label for="sea">الشحن البحري</label><div class="row"><input id="sea" type="number" min="0" value="0"><select id="seaC"><option value="USD">$</option><option value="LYD">د.ل</option></select></div><div class="hint" id="seaH"></div></div>
-  <div><label for="cus">التخليص الجمركي والميناء</label><div class="row"><input id="cus" type="number" min="0" value="0"><select id="cusC"><option value="LYD">د.ل</option><option value="USD">$</option></select></div><div class="hint" id="cusH"></div></div>
-  <div><label for="bank">عمولة التحويل أو الاعتماد (%)</label><input id="bank" type="number" step="0.1" min="0" value="0"><div class="hint" id="bankH"></div></div>
-  <div><label for="trans">النقل الداخلي للمخازن (د.ل)</label><input id="trans" type="number" min="0" value="0"></div>
-  <div><label for="labor">عمالة التفريغ والتستيف (د.ل)</label><input id="labor" type="number" min="0" value="0"></div>
-  <div><label for="other">مصاريف أخرى (د.ل)</label><input id="other" type="number" min="0" value="0"></div>
-  <div><label for="margin">هامش الربح (%)</label><input id="margin" type="number" step="0.5" min="0" value="15"><div class="hint">يطبَّق على الأصناف التي لم يُعدَّل سعرها يدويًا</div></div>
-  <div><label for="method">توزيع المصاريف حسب</label><select id="method"><option value="space">الحيز المكافئ</option><option value="fob">قيمة FOB</option><option value="qty">العدد الفعلي</option></select><div class="hint">150AH يأخذ حيز بطاريتين صغيرتين</div></div>
- </div>
- <div class="btns noprint" style="margin-top:12px"><button class="p" onclick="openQuote()">إصدار عرض أسعار للعميل</button><button class="p" onclick="document.getElementById('invFile').click()">إضافة فاتورة جديدة بالصورة (ذكاء اصطناعي)</button><input type="file" id="invFile" accept="image/*" hidden onchange="importInvoice(this)"><button id="undoBtn" class="x" style="display:none" onclick="undoImport()">تراجع عن الاستيراد</button><span class="hint" id="pdfH">عرض الأسعار يحتوي أسعار البيع فقط، بتاريخ إصداره.</span></div>
-</section>
+        <!-- شريط تبويبات الشحنات -->
+        <div id="tabsBar" class="max-w-7xl mx-auto px-3 sm:px-6 pb-2.5 flex gap-2 overflow-x-auto"></div>
+    </header>
 
-<section class="card">
- <div class="wrap"><table>
-  <thead><tr><th>#</th><th>نوع البطارية</th><th>AH</th><th>الكمية</th><th>معامل الحيز</th><th>وحدات الحيز</th><th>نسبة الحيز</th><th>FOB للقطعة $</th><th>إجمالي FOB $</th><th>مصاريف القطعة د.ل</th><th>التكلفة الواصلة د.ل</th><th>سعر البيع د.ل</th><th>ربح الصنف د.ل</th><th></th></tr></thead>
-  <tbody id="rows"></tbody>
- </table></div>
- <div class="btns noprint"><button class="p" onclick="addRow()">إضافة صنف</button><button class="p" onclick="openQuote()">عرض أسعار للعميل</button><button onclick="resetAll()" class="x">مسح كل البيانات</button></div>
- <div class="hint" id="saveH"></div>
-</section>
+    <!-- تنبيه الذكاء الاصطناعي -->
+    <div id="aiBanner" class="hidden max-w-7xl mx-auto px-4 mt-3 no-print">
+        <div class="bg-indigo-950 border border-indigo-500 text-indigo-100 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2">
+            <span>⏳ جاري قراءة فاتورة البطاريات وتحليل الأمبير والأسعار عبر Gemini AI...</span>
+        </div>
+    </div>
 
-<section class="card"><b>توزيع الحيز داخل الحاوية</b><div id="space" style="margin-top:8px"></div></section>
-</main>
+    <!-- جسم التطبيق -->
+    <main id="appBody" class="max-w-7xl mx-auto px-3 sm:px-6 pt-4 space-y-5"></main>
 
-<section id="quote"><div class="q">
- <div class="noprint btns" style="margin:0 0 12px"><button class="p" onclick="issuePDF()">تنزيل PDF</button><button class="p" onclick="shareQuote()">إرسال</button><span class="hint" id="qH" style="align-self:center"></span><button class="p" onclick="doPrint()">طباعة أو حفظ PDF</button><button onclick="closeQuote()">رجوع</button><label style="display:flex;gap:6px;align-items:center;margin:0"><input type="checkbox" id="showQ" checked onchange="renderQuote()" style="width:auto"> إظهار الكمية والإجمالي</label></div>
- <div style="text-align:center"><h2 style="margin:0">شركة سواعد الغد الحديثة</h2><div>لاستيراد وتوزيع الإطارات والبطاريات</div><div>طريق الدائري الثاني تاجوراء، طرابلس، ليبيا · هاتف 0914340100 - 0914340200</div><h3>عرض أسعار</h3></div>
- <p>السادة / العميل: <input id="qc" value="السادة المحترمون" style="width:60%"></p>
- <p>رقم العرض: <input id="qn" value="QT-2026-001" style="width:30%"> التاريخ: <input id="qd" type="date" style="width:30%"></p>
- <p>تحية طيبة، يسر الشركة أن تقدم لكم أسعار البطاريات الكورية PHLORIDE وفق الجدول التالي:</p>
- <div class="wrap"><table id="qt"></table></div>
- <p>الشروط: البطاريات أصلية الصنع، والأسعار بالدينار الليبي وقابلة للتغيير. صلاحية العرض: <input id="qv" value="7 أيام من تاريخه أو حتى نفاد الكمية" style="width:50%"></p>
- <p style="margin-top:36px">اعتماد الإدارة / الختم والتوقيع: ______________</p>
-</div></section>
+    <!-- نافذة قاعدة بيانات البطاريات -->
+    <div id="catalogModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-3 z-50 no-print">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col p-4 sm:p-6 space-y-3">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                <h3 class="text-base sm:text-lg font-bold text-sky-400">📚 قاعدة بيانات النضائد (البطاريات) والأمبير (Ah)</h3>
+                <button type="button" onclick="closeModal('catalogModal')" class="text-slate-400 text-2xl font-bold px-2">&times;</button>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs">
+                <input type="text" id="catDesc" placeholder="موديل / ماركة البطارية" class="col-span-2 bg-slate-900 border border-slate-700 rounded p-2 text-white">
+                <input type="number" id="catAh" placeholder="سعة الأمبير Ah (مثلاً 100)" class="bg-slate-900 border border-slate-700 rounded p-2 text-amber-400 font-bold">
+                <input type="number" step="0.01" id="catFob" placeholder="سعر FOB ($)" class="bg-slate-900 border border-slate-700 rounded p-2 text-white">
+                <button type="button" onclick="saveToCatalog()" class="bg-sky-600 text-white font-bold rounded p-2">＋ إضافة للقاعدة</button>
+            </div>
+            <div class="overflow-y-auto flex-1 border border-slate-800 rounded-xl">
+                <table class="w-full text-right text-xs">
+                    <thead class="bg-slate-950 text-slate-300 sticky top-0">
+                        <tr>
+                            <th class="p-2">موديل / ماركة البطارية</th>
+                            <th class="p-2 text-center">الأمبير (Ah)</th>
+                            <th class="p-2 text-center">FOB ($)</th>
+                            <th class="p-2 text-center">حذف</th>
+                        </tr>
+                    </thead>
+                    <tbody id="catalogList" class="divide-y divide-slate-800"></tbody>
+                </table>
+            </div>
+            <div class="flex justify-between items-center pt-2 border-t border-slate-800 text-xs">
+                <button type="button" onclick="resetCatalog()" class="text-rose-400 underline">استعادة قاعدة البطاريات الأصلية</button>
+                <button type="button" onclick="closeModal('catalogModal')" class="bg-slate-800 px-4 py-2 rounded-lg font-bold">إغلاق</button>
+            </div>
+        </div>
+    </div>
 
-<script>
-/* بديل خدمات Claude عند التشغيل كتطبيق مستقل */
-var __dp=null;
-window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();__dp=e});
-if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
-async function __gem(prompt,blob){
- var key=localStorage.getItem("gkey");
- if(!key){key=window.prompt("لقراءة الفاتورة بالذكاء الاصطناعي الصق مفتاح Gemini API (يُحفظ على جهازك فقط):");if(!key)throw {code:"not_granted"};localStorage.setItem("gkey",key.trim())}
- var b64=await new Promise(function(r){var fr=new FileReader();fr.onload=function(){r(fr.result.split(",")[1])};fr.readAsDataURL(blob)});
- var model=localStorage.getItem("gmodel")||"gemini-2.5-flash";
- var res=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+model+":generateContent?key="+encodeURIComponent(localStorage.getItem("gkey")),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:[{text:prompt},{inlineData:{mimeType:blob.type||"image/jpeg",data:b64}}]}],generationConfig:{responseMimeType:"application/json"}})});
- var j=await res.json();
- if(!res.ok){if(res.status==400||res.status==403)localStorage.removeItem("gkey");throw {code:"api",message:(j.error&&j.error.message)||""}}
- return JSON.parse(j.candidates[0].content.parts[0].text.replace(/```json|```/g,"").trim());
-}
-window.claude={use:async function(n){
- if(n==="downloads")return {save:async function(o){var b=(o.data instanceof Blob)?o.data:new Blob([o.data]);var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=o.filename;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1500);return {status:"saved"}}};
- if(n==="sample"){var f=async function(){throw {code:"unavailable"}};f.json=function(p,o){return __gem(p,(o&&o.images&&o.images[0])||null)};return f}
- return null}};
-</script>
-<script>
+    <!-- نافذة الإعدادات -->
+    <div id="settingsModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-3 z-50 no-print">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-5 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                <h3 class="text-base font-bold text-amber-400">⚙️ إعدادات المنظومة والنسخ الاحتياطي</h3>
+                <button type="button" onclick="closeModal('settingsModal')" class="text-slate-400 text-2xl font-bold">&times;</button>
+            </div>
+            <div class="space-y-1.5">
+                <label class="block text-xs font-bold text-slate-300">مفتاح Gemini API Key (لقراءة صور الفواتير):</label>
+                <input type="password" id="geminiKeyInput" placeholder="AIzaSy..." dir="ltr" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-sm text-white text-left">
+            </div>
+            <div class="space-y-1.5 border-t border-slate-800 pt-3">
+                <label class="block text-xs font-bold text-slate-300">استعادة نسخة احتياطية (JSON):</label>
+                <input type="file" accept=".json" onchange="uploadBackup(event)" class="w-full text-xs text-slate-400">
+            </div>
+            <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
+                <button type="button" onclick="closeModal('settingsModal')" class="bg-slate-800 px-4 py-2 rounded-lg text-xs">إلغاء</button>
+                <button type="button" onclick="saveSettings()" class="bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded-lg text-xs">حفظ الإعدادات</button>
+            </div>
+        </div>
+    </div>
 
-var KEY="battery-costing-v2";
-var DEF={rate:6.5,sea:0,seaC:"USD",cus:0,cusC:"LYD",bank:0,trans:0,labor:0,other:0,margin:15,method:"space",
-items:[{n:"MF55D23L",ah:60,q:132,f:1,p:34.9306,s:null},{n:"MF95D31L NX120-7L",ah:80,q:108,f:1,p:44.2487,s:null},{n:"MF80D26L NX110-5L",ah:70,q:480,f:1,p:40.5097,s:null},{n:"MF160G51L N150L",ah:150,q:40,f:2,p:83.7045,s:null},{n:"MF55559",ah:55,q:396,f:1,p:33.1812,s:null},{n:"MF105D31L",ah:90,q:108,f:1,p:48.7357,s:null},{n:"MF60044",ah:100,q:90,f:1,p:57.4171,s:null}]};
-var SKEY="battery-ships-v1",ALL=null;
-var S=load();
-function clone(o){return JSON.parse(JSON.stringify(o))}
-function load(){
- try{var a=localStorage.getItem(SKEY);if(a){ALL=JSON.parse(a);if(ALL&&ALL.data&&ALL.data[ALL.cur])return ALL.data[ALL.cur]}}catch(e){}
- var first=clone(DEF);
- try{var t=localStorage.getItem(KEY);if(t)first=JSON.parse(t)}catch(e){}
- first.name=first.name||"FALES-13-2026 (بطاريات)";
- ALL={cur:"s1",order:["s1"],data:{s1:first}};return first}
-function save(){try{ALL.data[ALL.cur]=S;localStorage.setItem(SKEY,JSON.stringify(ALL));g("saveH").textContent="تُحفظ التعديلات تلقائيًا في هذا المتصفح."}catch(e){g("saveH").textContent="تعذر الحفظ التلقائي في هذا المتصفح."}}
-function g(i){return document.getElementById(i)}
-function num(v){v=parseFloat(v);return isFinite(v)?v:0}
-function f2(x){return x.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}
-function f0(x){return x.toLocaleString("en-US",{maximumFractionDigits:0})}
-var F=["rate","sea","seaC","cus","cusC","bank","trans","labor","other","margin","method"];
-F.forEach(function(k){var e=g(k);e.value=S[k];e.addEventListener("input",function(){S[k]=(e.type=="number")?num(e.value):e.value;calc()})});
+    <script>
+        // عينة افتراضية للبطاريات وتوزيع المصاريف حسب سعة الأمبير Ah
+        const INITIAL_BATTERIES = [
+            { seq: 1, desc: "PHLORIDE BATTERY 70AH", qty: 200, fob: 34.0, ah: 70, note: "بطارية سيارات خفيفة" },
+            { seq: 2, desc: "PHLORIDE BATTERY 100AH", qty: 150, fob: 45.0, ah: 100, note: "بطارية سيارات دفع رباعي" },
+            { seq: 3, desc: "PHLORIDE BATTERY 150AH", qty: 100, fob: 72.0, ah: 150, note: "بطارية شاحنات متوسطة" },
+            { seq: 4, desc: "PHLORIDE BATTERY 200AH", qty: 50, fob: 98.0, ah: 200, note: "بطارية شاحنات ثقيلة ومعدات" }
+        ];
 
-function buildRows(){
- g("rows").innerHTML=S.items.map(function(it,i){
-  return '<tr><td>'+(i+1)+'</td>'+
-  '<td class="name"><input value="'+esc(it.n)+'" oninput="S.items['+i+'].n=this.value;calc()"></td>'+
-  '<td><input type="number" value="'+it.ah+'" oninput="S.items['+i+'].ah=num(this.value);calc()"></td>'+
-  '<td><input type="number" value="'+it.q+'" oninput="S.items['+i+'].q=num(this.value);calc()"></td>'+
-  '<td><input type="number" step="0.5" value="'+it.f+'" oninput="S.items['+i+'].f=num(this.value);calc()"></td>'+
-  '<td id="u'+i+'"></td><td id="pc'+i+'"></td>'+
-  '<td><input type="number" step="0.01" value="'+it.p+'" oninput="S.items['+i+'].p=num(this.value);calc()"></td>'+
-  '<td id="ft'+i+'"></td><td id="ex'+i+'"></td><td id="ld'+i+'"></td>'+
-  '<td><input type="number" step="0.01" id="sp'+i+'" value="'+(it.s===null?"":it.s)+'" placeholder="تلقائي" oninput="S.items['+i+'].s=this.value===\'\'?null:num(this.value);calc()"></td>'+
-  '<td id="pr'+i+'"></td><td><button class="x" onclick="delRow('+i+')">حذف</button></td></tr>'}).join("");
- calc()}
-function esc(s){return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;")}
-function addRow(){S.items.push({n:"",ah:0,q:0,f:1,p:0,s:null});buildRows()}
-function delRow(i){S.items.splice(i,1);buildRows()}
-function resetAll(){if(confirm("سيتم مسح كل الأصناف والمصاريف. هل تريد المتابعة؟")){S=JSON.parse(JSON.stringify(DEF));F.forEach(function(k){g(k).value=S[k]});buildRows()}}
+        const DEFAULT_CATALOG = INITIAL_BATTERIES.map(x => ({
+            desc: x.desc,
+            ah: x.ah,
+            fob: x.fob
+        }));
 
-function calc(){
- var r=S.rate>0?S.rate:1;
- var fobU=0,qty=0,sp=0;
- S.items.forEach(function(it){fobU+=it.q*it.p;qty+=it.q;sp+=it.q*it.f});
- var fobL=fobU*r;
- var sea=S.seaC=="USD"?S.sea*r:S.sea, cus=S.cusC=="USD"?S.cus*r:S.cus, bank=fobL*S.bank/100;
- var exp=sea+cus+bank+S.trans+S.labor+S.other;
- EXPB={fob:fobL,sea:sea,cus:cus,bank:bank,trans:S.trans,labor:S.labor,other:S.other};
- g("seaH").textContent="المعادل: "+f2(sea)+" د.ل";g("cusH").textContent="المعادل: "+f2(cus)+" د.ل";g("bankH").textContent="القيمة: "+f2(bank)+" د.ل";
- var tw=S.method=="space"?sp:S.method=="fob"?fobU:qty, cost=0,sales=0;
- S.items.forEach(function(it,i){
-  var u=it.q*it.f,ft=it.q*it.p,w=S.method=="space"?u:S.method=="fob"?ft:it.q;
-  var exU=(tw>0&&it.q>0)?exp*(w/tw)/it.q:0, ld=it.p*r+exU;
-  var sell=it.s===null?Math.round(ld*(1+S.margin/100)*100)/100:it.s;
-  cost+=ld*it.q;sales+=sell*it.q;it._ld=ld;it._ex=exU;
-  g("u"+i).textContent=f0(u);g("pc"+i).textContent=(sp>0?(u/sp*100).toFixed(1):"0.0")+"%";
-  g("ft"+i).textContent=f2(ft);g("ex"+i).textContent=f2(exU);g("ld"+i).textContent=f2(ld);
-  g("sp"+i).placeholder=f2(sell);g("pr"+i).textContent=f2((sell-ld)*it.q);
-  it._sell=sell});
- g("kFobU").textContent="$"+f2(fobU);g("kFobL").textContent=f2(fobL)+" د.ل";
- g("kAdv").textContent="مقدم 30%: $"+f2(fobU*.3)+" · بوليصة 70%: $"+f2(fobU*.7);
- g("kExp").textContent=f2(exp)+" د.ل";g("kExpR").textContent="نسبة المصاريف للفاتورة: "+(fobL>0?(exp/fobL*100).toFixed(1):"0.0")+"%";
- g("kTot").textContent=f2(cost)+" د.ل";g("kTotU").textContent="ما يعادل $"+f2(cost/r);
- g("kQty").textContent=f0(qty)+" بطارية";g("kSpace").textContent="إجمالي الحيز: "+f0(sp)+" وحدة";
- g("kProfit").textContent=f2(sales-cost)+" د.ل";g("kSales").textContent="إجمالي المبيعات: "+f2(sales)+" د.ل";
- g("kRoi").textContent="العائد على التكلفة: "+(cost>0?((sales-cost)/cost*100).toFixed(1):"0.0")+"%";
- g("space").innerHTML=S.items.map(function(it){var u=it.q*it.f,p=sp>0?u/sp*100:0;
-  return '<div style="margin-bottom:8px"><div style="font-size:.85rem">'+esc(it.n||"صنف بلا اسم")+' ('+f0(it.q)+' بطارية) = '+f0(u)+' وحدة حيز · '+p.toFixed(1)+'%</div><div class="bar"><i style="width:'+p+'%"></i></div></div>'}).join("");
- dash();save()}
+        const STORAGE_KEY = "sawaed_batteries_ah_v1";
 
-function openQuote(){g("quote").style.display="block";g("app").style.display="none";g("qd").value=new Date().toLocaleDateString("en-CA");renderQuote();window.scrollTo(0,0)}
-function closeQuote(){g("quote").style.display="";g("app").style.display=""}
-function renderQuote(){
- var sh=g("showQ").checked;
- g("qt").innerHTML='<tr><th>م</th><th>النوع</th><th>السعة AH</th><th>العلامة والمنشأ</th><th>سعر القطعة د.ل</th>'+(sh?'<th>الكمية</th><th>الإجمالي د.ل</th>':'')+'</tr>'+
- S.items.map(function(it,i){var s=it._sell||0;return '<tr><td>'+(i+1)+'</td><td>'+esc(it.n)+'</td><td>12V.'+it.ah+'AH</td><td>PHLORIDE - كوريا</td><td>'+f2(s)+'</td>'+(sh?'<td>'+f0(it.q)+'</td><td>'+f2(s*it.q)+'</td>':'')+'</tr>'}).join("")}
-function doPrint(){logQuote();document.body.classList.add("pq");try{window.print()}catch(e){alert("الطباعة غير متاحة هنا. افتح الصفحة في المتصفح مباشرة.")}setTimeout(function(){document.body.classList.remove("pq")},500)}
-function pdfHTML(){
- var td='border:1px solid #999;padding:9px 6px;text-align:center;font-size:14px';
- var th='background:#0f4c5c;color:#fff;padding:9px 6px;border:1px solid #0f4c5c;font-size:14px';
- var rows=S.items.map(function(it,i){return '<tr><td style="'+td+'">'+(i+1)+'</td><td style="'+td+';direction:ltr;font-weight:700">'+esc(it.n)+'</td><td style="'+td+'">12V.'+it.ah+'AH</td><td style="'+td+'">PHLORIDE<br>كوريا</td><td style="'+td+';font-weight:700;color:#0f4c5c">'+f2(it._sell||0)+'</td></tr>'}).join("");
- var d=g("qd").value||new Date().toISOString().slice(0,10);
- return '<div style="text-align:center;border-bottom:3px solid #0f4c5c;padding-bottom:10px"><div style="font-size:26px;font-weight:700;color:#0f4c5c">شركة سواعد الغد الحديثة</div><div style="font-size:13px">لاستيراد وتوزيع الإطارات والبطاريات</div><div style="font-size:12px;direction:ltr">SAWED ALGHAD ALHADITHA COMPANY</div><div style="font-size:12px">طريق الدائري الثاني تاجوراء، طرابلس - ليبيا · هاتف: 0914340100 - 0914340200</div></div>'+
- '<div style="text-align:center;margin:18px 0"><span style="background:#0f4c5c;color:#fff;padding:6px 30px;font-size:18px;font-weight:700">عرض أسعار</span></div>'+
- '<table style="width:100%;font-size:14px;margin-bottom:12px"><tr><td>السادة / العميل: <b>'+esc(g("qc").value||"السادة المحترمون")+'</b></td><td>رقم عرض السعر: <b>'+esc(g("qn").value||"")+'</b></td></tr><tr><td></td><td>التاريخ: <b>'+esc(d)+'</b></td></tr></table>'+
- '<p style="font-size:14px;line-height:1.9;margin:8px 0">تحية طيبة وبعد،، يسر شركة سواعد الغد الحديثة أن تتقدم لسيادتكم بعرض أسعار البطاريات الكورية عالية الجودة علامة (PHLORIDE - MADE IN KOREA) وفقاً للأسعار الموضحة أدناه:</p>'+
- '<table style="width:100%;border-collapse:collapse"><tr><th style="'+th+'">م</th><th style="'+th+'">نوع / موديل البطارية</th><th style="'+th+'">السعة</th><th style="'+th+'">العلامة والمنشأ</th><th style="'+th+'">سعر البيع للقطعة (د.ل)</th></tr>'+rows+'</table>'+
- '<div style="margin-top:20px;font-size:13px;line-height:2"><b style="color:#0f4c5c">الشروط والملاحظات:</b><br>• جميع البطاريات أصلية الصنع - صنع في كوريا.<br>• الأسعار بالدينار الليبي وهي قابلة للتغيير.<br>• صلاحية العرض: '+esc(g("qv").value||"7 أيام من تاريخه أو حتى نفاد الكمية")+'</div>'+
- '<table style="width:100%;margin-top:50px;font-size:13px;text-align:center"><tr><td>شركة سواعد الغد الحديثة<br>طرابلس - ليبيا</td><td>اعتماد الإدارة / الختم والتوقيع<br><br>..............................</td></tr></table>';
-}
-async function issuePDFOld(){
- var h=g("pdfH");
- if(typeof html2pdf==="undefined"){h.textContent="تعذر تحميل مكتبة PDF. تأكد من الاتصال بالإنترنت ثم أعد فتح الصفحة.";return}
- var dl=null;try{dl=await window.claude.use("downloads")}catch(e){}
- if(!dl){h.textContent="حفظ الملفات غير متاح في هذا العرض. .";return}
- h.textContent="جارٍ إنشاء الملف...";
- var box=document.createElement("div");
- box.style.cssText="position:fixed;left:-10000px;top:0;width:794px;background:#fff;color:#111;padding:36px;direction:rtl;font-family:inherit";
- box.innerHTML=pdfHTML();document.body.appendChild(box);
- try{
-  var blob=await html2pdf().set({margin:0,image:{type:"jpeg",quality:0.95},html2canvas:{scale:2,backgroundColor:"#ffffff"},jsPDF:{unit:"pt",format:"a4"}}).from(box).outputPdf("blob");
-  await dl.save({filename:"Quotation-"+((g("qn").value||"QT").replace(/[^A-Za-z0-9-]/g,""))+".pdf",data:blob});
-  h.textContent="تم إصدار عرض الأسعار.";
- }catch(e){h.textContent=(e&&e.code==="declined")?"أُلغي الحفظ.":"تعذر إنشاء الملف. حاول مرة أخرى."}
- box.remove();
-}
-function say(t){g("qH").textContent=t;g("pdfH").textContent=t;g("hm").textContent=t}
-function fname(){return "Quotation-"+((g("qn").value||"QT").replace(/[^A-Za-z0-9-]/g,""))+".pdf"}
-async function quoteBlob(){
- if(typeof html2pdf==="undefined")throw {code:"nolib"};
- var box=document.createElement("div");
- box.style.cssText="position:fixed;left:-10000px;top:0;width:794px;background:#fff;color:#111;padding:36px;direction:rtl;font-family:inherit";
- box.innerHTML=pdfHTML();document.body.appendChild(box);
- try{return await html2pdf().set({margin:0,image:{type:"jpeg",quality:0.95},html2canvas:{scale:2,backgroundColor:"#ffffff"},jsPDF:{unit:"pt",format:"a4"}}).from(box).outputPdf("blob")}finally{box.remove()}
-}
-function why(e){return e&&e.code==="nolib"?"تعذر تحميل مكتبة PDF (تحتاج إنترنت). استخدم زر الطباعة ثم اختر حفظ PDF.":(e&&e.code==="declined")?"أُلغي الحفظ.":"تعذر إنشاء الملف. جرّب زر الطباعة."}
-async function saveBlob(blob){
- var dl=null;try{dl=await window.claude.use("downloads")}catch(e){}
- if(!dl)throw {code:"nodl"};
- await dl.save({filename:fname(),data:blob});
-}
-async function issuePDF(){
- say("جارٍ إنشاء الملف...");
- try{var b=await quoteBlob();await saveBlob(b);logQuote();say("تم إصدار عرض الأسعار.")}
- catch(e){say(e&&e.code==="nodl"?"الحفظ غير متاح هنا. جرّب زر الإرسال أو الطباعة.":why(e))}
-}
-async function shareQuote(){
- say("جارٍ تجهيز الملف...");
- try{
-  var b=await quoteBlob(),f=new File([b],fname(),{type:"application/pdf"});
-  if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:"عرض أسعار"});logQuote();say("تمت المشاركة.")}
-  else{await saveBlob(b);logQuote();say("تم حفظ الملف، أرسله من هاتفك.")}
- }catch(e){say(e&&e.name==="AbortError"?"أُلغيت المشاركة.":(e&&e.code==="nodl"?"الإرسال غير متاح هنا. استخدم الطباعة.":why(e)))}
-}
-function setSub(){var m=S.meta||{};g("sub").textContent="الشحنة النشطة: "+(S.name||"-")+(m.supplier?" · المورد "+m.supplier:"")+(m.brand?" · "+m.brand:"")+(m.container?" · "+m.container:"")}
-async function shrink(f){
- try{var bm=await createImageBitmap(f),k=Math.min(1,1800/Math.max(bm.width,bm.height)),c=document.createElement("canvas");c.width=Math.round(bm.width*k);c.height=Math.round(bm.height*k);c.getContext("2d").drawImage(bm,0,0,c.width,c.height);
-  return await new Promise(function(r){c.toBlob(function(b){r(b||f)},"image/jpeg",0.85)})}catch(e){return f}
-}
-var UNDO=null;
-async function importInvoice(inp){
- var f=inp.files&&inp.files[0];inp.value="";if(!f)return;
- var sm=null;try{sm=await window.claude.use("sample")}catch(e){}
- if(!sm){say("ميزة الذكاء الاصطناعي غير متاحة هنا. .");return}
- say("جارٍ قراءة الفاتورة، قد يستغرق ذلك دقيقة...");
- var P='اقرأ صورة فاتورة المورد المرفقة لشحنة بطاريات. أعد JSON فقط بهذا الشكل: {"invoice":"رقم الفاتورة","supplier":"اسم المورد","brand":"الماركة والمنشأ","container":"نوع الحاوية","items":[{"n":"موديل البطارية كما في الفاتورة","ah":سعة الأمبير رقمًا,"q":الكمية رقمًا,"p":سعر القطعة الواحدة بالدولار رقمًا}]}. إن كانت الفاتورة تعرض إجمالي السطر فقط فاقسمه على الكمية. لا تخمّن أرقامًا غير ظاهرة؛ ضع null للقيمة غير الواضحة.';
- try{
-  var img=await shrink(f);
-  var d=await sm.json(P,{images:[img],cache:false});
-  var items=((d&&d.items)||[]).filter(function(x){return x&&x.n&&x.q>0}).map(function(x){var ah=num(x.ah);return {n:String(x.n),ah:ah,q:num(x.q),f:ah>=150?2:1,p:num(x.p),s:null}});
-  if(!items.length){say("لم أجد أصنافًا واضحة في الصورة. جرّب صورة أوضح.");return}
-  UNDO={items:S.items,meta:S.meta};
-  S.items=items;S.name=d.invoice||S.name;S.meta={invoice:d.invoice||"",supplier:d.supplier||"",brand:d.brand||"",container:d.container||""};
-  buildRows();setSub();renderTabs();g("sname").value=S.name||"";g("ssup").value=S.meta.supplier||"";g("undoBtn").style.display="";
-  say("تمت إضافة "+items.length+" صنف من الفاتورة. راجع الكميات والأسعار قبل الاعتماد.");
- }catch(e){say(e&&e.code==="not_granted"?"لم تسمح بتشغيل الذكاء الاصطناعي.":"تعذرت قراءة الفاتورة. حاول مرة أخرى بصورة أوضح.")}
-}
-function undoImport(){if(!UNDO)return;S.items=UNDO.items;S.meta=UNDO.meta;UNDO=null;buildRows();if(S.meta)setSub();g("undoBtn").style.display="none";say("تم التراجع.")}
-var EXPB={};
-function dash(){
- var arr=S.items.filter(function(it){return it._ld!==undefined}).map(function(it){return {n:it.n||'-',v:((it._sell||0)-(it._ld||0))*it.q}}).sort(function(a,b){return b.v-a.v}).slice(0,6);
- var mx=Math.max.apply(null,arr.map(function(a){return a.v}).concat([1]));
- g('chTop').innerHTML=arr.map(function(a){return '<div style="margin:8px 0"><div style="display:flex;justify-content:space-between;font-size:.8rem"><span dir="ltr">'+esc(a.n)+'</span><b>'+f0(a.v)+' د.ل</b></div><div class="bar"><i style="width:'+Math.max(0,a.v/mx*100)+'%;background:#d49a1f"></i></div></div>'}).join('');
- var parts=[['قيمة البضاعة',EXPB.fob,'#0f6b63'],['الشحن البحري',EXPB.sea,'#2563eb'],['التخليص',EXPB.cus,'#d49a1f'],['عمولة التحويل',EXPB.bank,'#7c3aed'],['النقل والتفريغ',(EXPB.trans||0)+(EXPB.labor||0),'#dc2626'],['أخرى',EXPB.other,'#64748b']].filter(function(p){return p[1]>0});
- if(!parts.length){g('chDonut').textContent='أدخل أسعار الأصناف لعرض التوزيع.';return}
- var tot=parts.reduce(function(s,p){return s+p[1]},0),acc=0;
- var stops=parts.map(function(p){var a=acc/tot*100;acc+=p[1];return p[2]+' '+a+'% '+(acc/tot*100)+'%'}).join(',');
- g('chDonut').innerHTML='<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><div style="width:130px;height:130px;border-radius:50%;background:conic-gradient('+stops+');display:grid;place-items:center"><div style="width:76px;height:76px;border-radius:50%;background:var(--card)"></div></div><div style="font-size:.8rem;line-height:1.9">'+parts.map(function(p){return '<div><span style="display:inline-block;width:10px;height:10px;background:'+p[2]+';border-radius:2px;margin-left:6px"></span>'+p[0]+' '+(p[1]/tot*100).toFixed(1)+'%</div>'}).join('')+'</div></div>';
-}
-function logQuote(){S.qlog=S.qlog||[];S.qlog.unshift({no:g('qn').value,c:g('qc').value,d:g('qd').value,n:S.items.length});S.qlog=S.qlog.slice(0,8);save();renderLog()}
-function renderLog(){var q=S.qlog||[];g('qlog').innerHTML=q.length?q.map(function(x){return '<tr><td>'+esc(x.no||'')+'</td><td>'+esc(x.c||'')+'</td><td>'+esc(x.d||'')+'</td><td>'+x.n+'</td></tr>'}).join(''):'<tr><td colspan="4" style="text-align:center;color:var(--mute)">لا توجد عروض صدرت بعد</td></tr>'}
-function renderTabs(){
- g('tabs').innerHTML=ALL.order.map(function(id){var n=ALL.data[id].name||'فاتورة';return '<button class="tab'+(id===ALL.cur?' on':'')+'" onclick="sw(\''+id+'\')">'+esc(n)+'</button>'}).join('')+'<button class="tab add" onclick="newShip()">+ فاتورة فارغة جديدة</button>'+(ALL.order.length>1?'<button class="tab del" id="delB" onclick="delShip()">حذف الحالية</button>':'')}
-function applyS(){F.forEach(function(k){g(k).value=S[k]});g('sname').value=S.name||'';g('ssup').value=(S.meta&&S.meta.supplier)||'';buildRows();setSub();renderLog();renderTabs()}
-function sw(id){save();ALL.cur=id;S=ALL.data[id];applyS()}
-function newShip(){save();var id='s'+Date.now(),n=clone(DEF);n.items=[];n.name='فاتورة جديدة';n.rate=S.rate;ALL.order.push(id);ALL.data[id]=n;ALL.cur=id;S=n;applyS();save()}
-function delShip(){var b=g('delB');if(!b.dataset.c){b.dataset.c=1;b.textContent='اضغط للتأكيد';return}var i=ALL.order.indexOf(ALL.cur);delete ALL.data[ALL.cur];ALL.order.splice(i,1);ALL.cur=ALL.order[0];S=ALL.data[ALL.cur];applyS();save()}
-g('sname').addEventListener('input',function(){S.name=this.value;save();renderTabs();setSub()});
-g('ssup').addEventListener('input',function(){S.meta=S.meta||{};S.meta.supplier=this.value;setSub();save()});
-function waText(){var t='عرض أسعار - شركة سواعد الغد الحديثة\n'+new Date().toLocaleDateString('en-CA')+'\n\n';S.items.forEach(function(it){t+=(it.n||'-')+' (12V.'+it.ah+'AH): '+f2(it._sell||0)+' د.ل\n'});return t+'\nالأسعار بالدينار الليبي وقابلة للتغيير.\nهاتف: 0914340100'}
-async function shareWA(){var t=waText();
- try{if(navigator.share){await navigator.share({text:t});logQuote();return}}catch(e){if(e&&e.name==='AbortError')return}
- try{window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank')}catch(e){}
- try{await navigator.clipboard.writeText(t);say('نُسخت الرسالة، إن لم يفتح واتساب الصقها فيه.')}catch(e){say('تعذر فتح واتساب من هنا.')}}
-async function exportCSV(){
- var rows=[['الصنف','السعة AH','الكمية','وحدات الحيز','FOB للقطعة $','مصاريف القطعة د.ل','التكلفة الواصلة د.ل','سعر البيع د.ل','الربح د.ل']];
- S.items.forEach(function(it){var ld=it._ld||0,s=it._sell||0;rows.push([it.n,it.ah,it.q,it.q*it.f,it.p,(it._ex||0).toFixed(2),ld.toFixed(2),s.toFixed(2),((s-ld)*it.q).toFixed(2)])});
- var csv='\ufeff'+rows.map(function(r){return r.map(function(c){return '"'+String(c).replace(/"/g,'""')+'"'}).join(',')}).join('\r\n');
- var dl=null;try{dl=await window.claude.use('downloads')}catch(e){}
- if(!dl){say('الحفظ غير متاح هنا.');return}
- try{await dl.save({filename:'Shipment-'+((S.name||'').replace(/[^A-Za-z0-9-]/g,'')||'export')+'.csv',data:csv});say('تم تصدير الملف، افتحه بـ Excel.')}catch(e){say(e&&e.code==='declined'?'أُلغي الحفظ.':'تعذر التصدير.')}}
-function installApp(){if(__dp){__dp.prompt();return}say('لتثبيته كتطبيق: من قائمة المتصفح (⋮) اختر «إضافة إلى الشاشة الرئيسية».')}
-renderLog();
-g('sname').value=S.name||'';g('ssup').value=(S.meta&&S.meta.supplier)||'';renderTabs();
-setSub();
-buildRows();
-</script>
+        let state = {
+            apiKey: "",
+            activeShipmentId: "ship_bat1",
+            catalog: JSON.parse(JSON.stringify(DEFAULT_CATALOG)),
+            shipments: [
+                {
+                    id: "ship_bat1",
+                    title: "شحنة نضائد وبطاريات PHLORIDE",
+                    exchangeRate: 10.25,
+                    profitMargin: 12,
+                    containersCount: 1,
+                    seaFreightUSD: 4500,
+                    loadingFeesUSD: 200,
+                    customsLYD: 1500,
+                    localTransportLYD: 1200,
+                    unloadingTotalLYD: 500,
+                    pressingTotalLYD: 0,
+                    searchFilter: "",
+                    items: JSON.parse(JSON.stringify(INITIAL_BATTERIES))
+                }
+            ]
+        };
+
+        function loadState() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (parsed && Array.isArray(parsed.shipments) && parsed.shipments.length > 0) {
+                        state = parsed;
+                    }
+                }
+            } catch (e) {
+                console.error("Storage load error:", e);
+            }
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            } catch (e) {
+                console.error("Storage save error:", e);
+            }
+        }
+
+        function getActiveShipment() {
+            return state.shipments.find(s => s.id === state.activeShipmentId) || state.shipments[0];
+        }
+
+        // محرك حسابات البطاريات بناءً على سعة الأمبير Ah طردياً
+        function computeMetrics(s) {
+            const rate = Number(s.exchangeRate) || 0;
+            const marginPct = (Number(s.profitMargin) || 0) / 100;
+            const cCount = Number(s.containersCount) || 0;
+            const seaUSD = Number(s.seaFreightUSD) || 0;
+            const loadUSD = Number(s.loadingFeesUSD) || 0;
+            const custLYD = Number(s.customsLYD) || 0;
+            const transLYD = Number(s.localTransportLYD) || 0;
+            const unloadLYD = Number(s.unloadingTotalLYD) || 0;
+            const pressLYD = Number(s.pressingTotalLYD) || 0;
+
+            let totalPieces = 0;
+            let totalFobUSD = 0;
+            let totalAhUnits = 0; // إجمالي وحدات الأمبير (الكمية × سعة الأمبير)
+
+            s.items.forEach(item => {
+                const q = Number(item.qty) || 0;
+                const f = Number(item.fob) || 0;
+                const ah = Number(item.ah) || 0;
+                totalPieces += q;
+                totalFobUSD += q * f;
+                totalAhUnits += q * ah;
+            });
+
+            // إجمالي التكاليف التشغيلية الكلية بالدينار الليبي
+            const totalOperatingLYD = ((seaUSD + loadUSD) * cCount * rate) + (custLYD * cCount) + (transLYD * cCount) + unloadLYD + pressLYD;
+
+            // تكلفة مصاريف التشغيل لكل 1 أمبير (Ah)
+            const expensePerAhLYD = totalAhUnits > 0 ? (totalOperatingLYD / totalAhUnits) : 0;
+
+            let totalLandedLYD = 0;
+            let totalSellingLYD = 0;
+
+            const rows = s.items.map((item, idx) => {
+                const q = Number(item.qty) || 0;
+                const f = Number(item.fob) || 0;
+                const ah = Number(item.ah) || 0;
+
+                const rowFobUSD = q * f;
+                const itemTotalAh = q * ah;
+                const shareOfExpensesLYD = itemTotalAh * expensePerAhLYD; // نصيب الصنف من المصاريف حسب إجمالي أمبيره
+                const totalCostLYD = (q * f * rate) + shareOfExpensesLYD;
+                const landedUnitLYD = q > 0 ? (totalCostLYD / q) : 0; // التكلفة الواصلة للقطعة الواحدة
+                const sellingUnitLYD = landedUnitLYD * (1 + marginPct); // سعر البيع
+                const profitUnitLYD = sellingUnitLYD - landedUnitLYD; // الربح للقطعة
+
+                totalLandedLYD += totalCostLYD;
+                totalSellingLYD += sellingUnitLYD * q;
+
+                return {
+                    ...item,
+                    idx,
+                    rowFobUSD,
+                    itemTotalAh,
+                    shareOfExpensesLYD,
+                    landedUnitLYD,
+                    sellingUnitLYD,
+                    profitUnitLYD,
+                    rowSellingLYD: sellingUnitLYD * q
+                };
+            });
+
+            return {
+                totalPieces,
+                totalFobUSD,
+                totalAhUnits,
+                totalOperatingLYD,
+                expensePerAhLYD,
+                totalLandedLYD,
+                totalSellingLYD,
+                totalProfitLYD: totalSellingLYD - totalLandedLYD,
+                rows
+            };
+        }
+
+        function renderTabs() {
+            const bar = document.getElementById("tabsBar");
+            if (!bar) return;
+            bar.innerHTML = state.shipments.map(s => `
+                <button type="button" onclick="selectShipment('${s.id}')"
+                    class="px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition ${s.id === state.activeShipmentId ? 'tab-active shadow' : 'tab-inactive'}">
+                    🔋 ${s.title}
+                </button>
+            `).join('');
+        }
+
+        function renderApp() {
+            renderTabs();
+            const s = getActiveShipment();
+            const m = computeMetrics(s);
+            const body = document.getElementById("appBody");
+            if (!body) return;
+
+            const filterTxt = (s.searchFilter || "").trim().toLowerCase();
+            const filteredRows = filterTxt
+                ? m.rows.filter(r => r.desc.toLowerCase().includes(filterTxt) || (r.note && r.note.toLowerCase().includes(filterTxt)))
+                : m.rows;
+
+            body.innerHTML = `
+                <!-- 1. شريط التحكم العلوي -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg no-print flex flex-wrap justify-between items-center gap-3">
+                    <div class="flex-1 min-w-[220px]">
+                        <label class="block text-[11px] text-slate-400 mb-1">اسم / مرجع الشحنة:</label>
+                        <input type="text" value="${escapeHtml(s.title)}" onchange="updateField('title', this.value)"
+                            class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-sm sm:text-base font-extrabold text-amber-400 outline-none">
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" onclick="window.print()" class="bg-emerald-600 active:bg-emerald-500 text-white font-bold px-3.5 py-2 rounded-xl text-xs sm:text-sm shadow">🖨️ طباعة / PDF للزبائن</button>
+                        <button type="button" onclick="sendWhatsApp()" class="bg-green-600 active:bg-green-500 text-white font-bold px-3.5 py-2 rounded-xl text-xs sm:text-sm shadow">💬 إرسال واتساب</button>
+                        <button type="button" onclick="removeShipment()" class="bg-rose-950 border border-rose-800 text-rose-300 px-3 py-2 rounded-xl text-xs">حذف</button>
+                    </div>
+                </div>
+
+                <!-- 2. لوحة المصاريف وتوزيع الأمبير -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 no-print">
+                    <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <h2 class="text-sm font-extrabold text-amber-400">🎛️ لوحة مصاريف شحنة النضائد (توزيع حسب Ah)</h2>
+                            <span class="text-[11px] text-slate-400">حساب آلي طردي حسب الأمبير</span>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
+                            <div class="bg-slate-950 p-2.5 rounded-xl border border-amber-500/30">
+                                <label class="block text-slate-400 mb-1">سعر الصرف ($/د.ل)</label>
+                                <input type="number" step="0.01" value="${s.exchangeRate}" onchange="updateNum('exchangeRate', this.value)"
+                                    class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm font-black text-amber-400">
+                            </div>
+                            <div class="bg-slate-950 p-2.5 rounded-xl border border-emerald-500/30">
+                                <label class="block text-slate-400 mb-1">هامش الربح (%)</label>
+                                <input type="number" step="0.5" value="${s.profitMargin}" onchange="updateNum('profitMargin', this.value)"
+                                    class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm font-black text-emerald-400">
+                            </div>
+                            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                                <label class="block text-slate-400 mb-1">عدد الحاويات</label>
+                                <input type="number" step="1" value="${s.containersCount}" onchange="updateNum('containersCount', this.value)"
+                                    class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm font-bold text-white">
+                            </div>
+                            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                                <label class="block text-slate-400 mb-1">شحن بحري للحاوية ($)</label>
+                                <input type="number" step="50" value="${s.seaFreightUSD}" onchange="updateNum('seaFreightUSD', this.value)"
+                                    class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm text-white">
+                            </div>
+                            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                                <label class="block text-slate-400 mb-1">رسوم تحميل ($)</label>
+                                <input type="number" step="10" value="${s.loadingFeesUSD}" onchange="updateNum('loadingFeesUSD', this.value)"
+                                    class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm text-white">
+                            </div>
+                            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                                <label class="block text-slate-400 mb-1">جمرك الحاوية (د.ل)</label>
+                                <input type="number" step="100" value="${s.customsLYD}" onchange="updateNum('customsLYD', this.value)"
+                                    class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm text-white">
+                            </div>
+                            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                                <label class="block text-slate-400 mb-1">نقل داخلي (د.ل)</label>
+                                <input type="number" step="100" value="${s.localTransportLYD}" onchange="updateNum('localTransportLYD', this.value)"
+                                    class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm text-white">
+                            </div>
+                            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                                <label class="block text-slate-400 mb-1">عمال تنزيل (د.ل)</label>
+                                <input type="number" step="50" value="${s.unloadingTotalLYD}" onchange="updateNum('unloadingTotalLYD', this.value)"
+                                    class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm text-white">
+                            </div>
+                            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                                <label class="block text-slate-400 mb-1">مصاريف أخرى (د.ل)</label>
+                                <input type="number" step="50" value="${s.pressingTotalLYD}" onchange="updateNum('pressingTotalLYD', this.value)"
+                                    class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm text-white">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between space-y-3">
+                        <div class="border-b border-slate-800 pb-2">
+                            <h2 class="text-sm font-extrabold text-sky-400">📊 إحصائيات وحدات الأمبير (Ah)</h2>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 text-xs">
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                                <div class="text-slate-400">إجمالي عدد البطاريات</div>
+                                <div class="text-lg font-black text-white mt-0.5">${m.totalPieces.toLocaleString()} <span class="text-[11px] font-normal text-slate-400">بطارية</span></div>
+                            </div>
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                                <div class="text-slate-400">إجمالي قيمة البضاعة FOB</div>
+                                <div class="text-lg font-black text-sky-400 mt-0.5">$${m.totalFobUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                            </div>
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                                <div class="text-slate-400">إجمالي وحدات الأمبير (Ah)</div>
+                                <div class="text-lg font-black text-amber-400 mt-0.5">${m.totalAhUnits.toLocaleString()} <span class="text-[11px] font-normal text-slate-400">Ah</span></div>
+                            </div>
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                                <div class="text-slate-400">التكاليف التشغيلية الكلية</div>
+                                <div class="text-lg font-black text-rose-400 mt-0.5">${m.totalOperatingLYD.toLocaleString('en-US', {maximumFractionDigits: 2})} <span class="text-[11px] font-normal text-slate-400">د.ل</span></div>
+                            </div>
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                                <div class="text-slate-400">نصيب كل 1 Ah من المصاريف</div>
+                                <div class="text-base font-extrabold text-slate-200 mt-0.5">${m.expensePerAhLYD.toFixed(3)} <span class="text-[11px] font-normal text-slate-400">د.ل/Ah</span></div>
+                            </div>
+                            <div class="bg-slate-950 p-3 rounded-xl border border-emerald-500/30">
+                                <div class="text-slate-400">صافي الربح المتوقع</div>
+                                <div class="text-base font-black text-emerald-400 mt-0.5">${m.totalProfitLYD.toLocaleString('en-US', {maximumFractionDigits: 0})} <span class="text-[11px] font-normal text-slate-400">د.ل</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. شريط البحث والأصناف -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow no-print flex flex-wrap items-center gap-2">
+                    <input type="text" placeholder="🔍 ابحث في البطاريات (مثلاً 150Ah أو PHLORIDE)..." value="${escapeHtml(s.searchFilter || '')}"
+                        oninput="updateSearch(this.value)"
+                        class="flex-1 min-w-[200px] bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none">
+                    <select id="quickCatalogSelect" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 max-w-xs">
+                        ${state.catalog.map((c, i) => `<option value="${i}">${c.desc} (${c.ah}Ah) - $${c.fob}</option>`).join('')}
+                    </select>
+                    <button type="button" onclick="addFromCatalog()" class="bg-amber-500 text-slate-950 font-bold px-3.5 py-2 rounded-xl text-xs">＋ من القاعدة</button>
+                    <button type="button" onclick="addBlankRow()" class="bg-slate-800 border border-slate-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs">＋ بطارية جديدة</button>
+                </div>
+
+                <!-- 4. جدول البطاريات التفصيلي -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden no-print">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-950 text-slate-300 border-b border-slate-800">
+                                    <th class="p-2.5 text-center">ت</th>
+                                    <th class="p-2.5 min-w-[220px]">موديل / ماركة البطارية</th>
+                                    <th class="p-2.5 text-center">الكمية</th>
+                                    <th class="p-2.5 text-center text-amber-400">سعة الأمبير (Ah)</th>
+                                    <th class="p-2.5 text-center">FOB ($)</th>
+                                    <th class="p-2.5 text-center">إجمالي FOB ($)</th>
+                                    <th class="p-2.5 text-center">إجمالي Ah</th>
+                                    <th class="p-2.5 text-center text-amber-400">التكلفة الواصلة (د.ل)</th>
+                                    <th class="p-2.5 text-center text-emerald-400">سعر البيع (د.ل)</th>
+                                    <th class="p-2.5 text-center">الربح للقطعة</th>
+                                    <th class="p-2.5 text-center">حذف</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800">
+                                ${filteredRows.map(r => `
+                                    <tr class="hover:bg-slate-800/60 transition">
+                                        <td class="p-2 text-center text-slate-400 font-bold">${r.idx + 1}</td>
+                                        <td class="p-2">
+                                            <input type="text" value="${escapeHtml(r.desc)}" onchange="updateRow(${r.idx}, 'desc', this.value)"
+                                                class="w-full bg-slate-950 border border-slate-800 rounded px-2 py-1 text-white font-bold">
+                                            ${r.note ? `<div class="text-[10px] text-amber-400/90 mt-0.5">💡 ${escapeHtml(r.note)}</div>` : ''}
+                                        </td>
+                                        <td class="p-2">
+                                            <input type="number" value="${r.qty}" onchange="updateRow(${r.idx}, 'qty', this.value)"
+                                                class="w-16 bg-slate-950 border border-slate-800 rounded p-1 font-bold text-white">
+                                        </td>
+                                        <td class="p-2">
+                                            <input type="number" value="${r.ah}" onchange="updateRow(${r.idx}, 'ah', this.value)"
+                                                class="w-16 bg-slate-950 border border-amber-900/60 rounded p-1 text-amber-400 font-bold">
+                                        </td>
+                                        <td class="p-2">
+                                            <input type="number" step="0.01" value="${r.fob}" onchange="updateRow(${r.idx}, 'fob', this.value)"
+                                                class="w-20 bg-slate-950 border border-slate-800 rounded p-1 text-slate-200">
+                                        </td>
+                                        <td class="p-2 text-center text-slate-300 font-semibold">${r.rowFobUSD.toFixed(2)}</td>
+                                        <td class="p-2 text-center text-amber-300 font-bold">${r.itemTotalAh.toLocaleString()} Ah</td>
+                                        <td class="p-2 text-center font-extrabold text-amber-400">${r.landedUnitLYD.toFixed(2)}</td>
+                                        <td class="p-2 text-center font-black text-emerald-400 text-sm">${r.sellingUnitLYD.toFixed(2)}</td>
+                                        <td class="p-2 text-center text-emerald-300">${r.profitUnitLYD.toFixed(2)}</td>
+                                        <td class="p-2 text-center">
+                                            <button type="button" onclick="deleteRow(${r.idx})" class="text-rose-400 bg-rose-950/50 px-2 py-1 rounded font-bold">✕</button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                            <tfoot class="bg-slate-950 font-extrabold text-slate-200 border-t-2 border-slate-700">
+                                <tr>
+                                    <td colspan="2" class="p-3">المجموع الكلي للشحنة</td>
+                                    <td class="p-3 text-center text-white">${m.totalPieces.toLocaleString()}</td>
+                                    <td class="p-3 text-center">—</td>
+                                    <td class="p-3 text-center">—</td>
+                                    <td class="p-3 text-center text-sky-400">$${m.totalFobUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                                    <td class="p-3 text-center text-amber-400">${m.totalAhUnits.toLocaleString()} Ah</td>
+                                    <td class="p-3 text-center text-amber-400">${(m.totalLandedLYD / (m.totalPieces || 1)).toFixed(2)} متوسط</td>
+                                    <td class="p-3 text-center text-emerald-400">${m.totalSellingLYD.toLocaleString('en-US', {maximumFractionDigits: 0})} د.ل</td>
+                                    <td class="p-3 text-center text-emerald-300">${m.totalProfitLYD.toLocaleString('en-US', {maximumFractionDigits: 0})}</td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 5. عرض الأسعار النظيف للزبائن -->
+                <div id="printQuoteSection" class="hidden bg-white text-black p-6 rounded-xl">
+                    <div class="flex justify-between items-start border-b-2 border-black pb-3 mb-4">
+                        <div>
+                            <h1 class="text-xl font-black">شركة سواعد الغد الحديثة للإطارات والنضائد</h1>
+                            <p class="text-xs mt-1">تاجوراء البيفي - شارع الأمم المتحدة | طرابلس - سبها</p>
+                            <p class="text-xs font-bold mt-0.5">هواتف: 0914340100 - 0914340200</p>
+                        </div>
+                        <div class="text-left">
+                            <h2 class="text-lg font-extrabold">عرض أسعار نضائد جملة</h2>
+                            <p class="text-xs">المرجع: ${escapeHtml(s.title)}</p>
+                            <p class="text-xs">التاريخ: ${new Date().toLocaleDateString('ar-LY')}</p>
+                        </div>
+                    </div>
+
+                    <table class="w-full text-right border-collapse border border-gray-400 text-xs">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="border border-gray-400 p-1.5 text-center w-8">ت</th>
+                                <th class="border border-gray-400 p-1.5">موديل / ماركة البطارية</th>
+                                <th class="border border-gray-400 p-1.5 text-center w-28">سعر البيع (د.ل)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${m.rows.map((r, i) => `
+                                <tr>
+                                    <td class="border border-gray-400 p-1 text-center">${i + 1}</td>
+                                    <td class="border border-gray-400 p-1 font-bold">${escapeHtml(r.desc)}</td>
+                                    <td class="border border-gray-400 p-1 text-center font-extrabold">${r.sellingUnitLYD.toFixed(2)} د.ل</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+
+                    <div class="mt-4 pt-2 border-t border-gray-300 flex justify-between text-[11px]">
+                        <span>* الأسعار بالدينار الليبي وقابلة للتغيير دون إشعار مسبق.</span>
+                        <span class="font-bold">إدارة المبيعات - شركة سواعد الغد الحديثة</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function escapeHtml(str) {
+            return String(str || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function selectShipment(id) {
+            state.activeShipmentId = id;
+            saveState();
+            renderApp();
+        }
+
+        function createNewShipment() {
+            const id = "ship_" + Date.now();
+            state.shipments.push({
+                id,
+                title: "شحنة بطاريات جديدة #" + (state.shipments.length + 1),
+                exchangeRate: getActiveShipment().exchangeRate || 10.25,
+                profitMargin: 12,
+                containersCount: 1,
+                seaFreightUSD: 4500,
+                loadingFeesUSD: 200,
+                customsLYD: 1500,
+                localTransportLYD: 1200,
+                unloadingTotalLYD: 500,
+                pressingTotalLYD: 0,
+                searchFilter: "",
+                items: [
+                    { seq: 1, desc: "PHLORIDE BATTERY 100AH", qty: 100, fob: 45.0, ah: 100, note: "" }
+                ]
+            });
+            state.activeShipmentId = id;
+            saveState();
+            renderApp();
+        }
+
+        function removeShipment() {
+            if (state.shipments.length <= 1) {
+                alert("لا يمكن حذف الشحنة الوحيدة.");
+                return;
+            }
+            if (confirm("هل أنت متأكد من حذف هذه الشحنة؟")) {
+                state.shipments = state.shipments.filter(s => s.id !== state.activeShipmentId);
+                state.activeShipmentId = state.shipments[0].id;
+                saveState();
+                renderApp();
+            }
+        }
+
+        function updateField(key, val) {
+            getActiveShipment()[key] = val;
+            saveState();
+            renderTabs();
+        }
+
+        function updateNum(key, val) {
+            getActiveShipment()[key] = Number(val) || 0;
+            saveState();
+            renderApp();
+        }
+
+        function updateSearch(val) {
+            getActiveShipment().searchFilter = val;
+            renderApp();
+        }
+
+        function updateRow(idx, key, val) {
+            const item = getActiveShipment().items[idx];
+            if (!item) return;
+            if (key === "desc" || key === "note") {
+                item[key] = val;
+            } else {
+                item[key] = Number(val) || 0;
+            }
+            saveState();
+            renderApp();
+        }
+
+        function deleteRow(idx) {
+            getActiveShipment().items.splice(idx, 1);
+            saveState();
+            renderApp();
+        }
+
+        function addBlankRow() {
+            const s = getActiveShipment();
+            s.items.push({ seq: s.items.length + 1, desc: "بطارية جديدة PHLORIDE", qty: 50, fob: 40.0, ah: 100, note: "" });
+            saveState();
+            renderApp();
+        }
+
+        function addFromCatalog() {
+            const sel = document.getElementById("quickCatalogSelect");
+            if (!sel) return;
+            const c = state.catalog[Number(sel.value)];
+            if (!c) return;
+            const s = getActiveShipment();
+            s.items.push({ seq: s.items.length + 1, desc: c.desc, qty: 50, fob: c.fob, ah: c.ah, note: "" });
+            saveState();
+            renderApp();
+        }
+
+        function sendWhatsApp() {
+            const s = getActiveShipment();
+            const m = computeMetrics(s);
+            let msg = `*شركة سواعد الغد الحديثة للإطارات والنضائد*
+عرض أسعار نضائد: ${s.title}
+
+`;
+            m.rows.forEach((r, i) => {
+                msg += `${i + 1}. ${r.desc} ⬅️ *${r.sellingUnitLYD.toFixed(2)} د.ل*
+`;
+            });
+            msg += `
+📞 0914340100 - 0914340200
+*الأسعار قابلة للتغيير دون إشعار مسبق.`;
+            window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank");
+        }
+
+        function openModal(id) {
+            if (id === "catalogModal") renderCatalog();
+            if (id === "settingsModal") document.getElementById("geminiKeyInput").value = state.apiKey || "";
+            const el = document.getElementById(id);
+            el.classList.remove("hidden");
+            el.classList.add("flex");
+        }
+
+        function closeModal(id) {
+            const el = document.getElementById(id);
+            el.classList.add("hidden");
+            el.classList.remove("flex");
+        }
+
+        function renderCatalog() {
+            const tbody = document.getElementById("catalogList");
+            if (!tbody) return;
+            tbody.innerHTML = state.catalog.map((c, i) => `
+                <tr>
+                    <td class="p-2 font-bold text-white">${escapeHtml(c.desc)}</td>
+                    <td class="p-2 text-center text-amber-400 font-bold">${c.ah} Ah</td>
+                    <td class="p-2 text-center">$${c.fob}</td>
+                    <td class="p-2 text-center"><button type="button" onclick="deleteCat(${i})" class="text-rose-400 font-bold">✕</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function saveToCatalog() {
+            const desc = document.getElementById("catDesc").value.trim();
+            const ah = Number(document.getElementById("catAh").value) || 100;
+            const fob = Number(document.getElementById("catFob").value) || 40;
+            if (!desc) { alert("أدخل اسم البطارية."); return; }
+            state.catalog.unshift({ desc, ah, fob });
+            saveState();
+            renderCatalog();
+            renderApp();
+            document.getElementById("catDesc").value = "";
+        }
+
+        function deleteCat(i) {
+            state.catalog.splice(i, 1);
+            saveState();
+            renderCatalog();
+            renderApp();
+        }
+
+        function resetCatalog() {
+            if (confirm("استعادة قاعدة البطاريات الأصلية؟")) {
+                state.catalog = JSON.parse(JSON.stringify(DEFAULT_CATALOG));
+                saveState();
+                renderCatalog();
+                renderApp();
+            }
+        }
+
+        function saveSettings() {
+            state.apiKey = document.getElementById("geminiKeyInput").value.trim();
+            saveState();
+            closeModal("settingsModal");
+            alert("تم حفظ الإعدادات.");
+        }
+
+        function downloadBackup() {
+            const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "sawaed_batteries_backup_" + Date.now() + ".json";
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function uploadBackup(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (parsed && Array.isArray(parsed.shipments)) {
+                        state = parsed;
+                        saveState();
+                        renderApp();
+                        closeModal("settingsModal");
+                        alert("تمت استعادة النسخة الاحتياطية بنجاح!");
+                    }
+                } catch (err) {
+                    alert("ملف النسخة الاحتياطية غير صالح.");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function triggerAI() {
+            if (!state.apiKey) {
+                const k = prompt("أدخل مفتاح Gemini API Key لقراءة فاتورة البطاريات:");
+                if (!k || !k.trim()) return;
+                state.apiKey = k.trim();
+                saveState();
+            }
+            const inp = document.getElementById("aiFile");
+            inp.value = "";
+            inp.click();
+        }
+
+        async function processAIFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const banner = document.getElementById("aiBanner");
+            banner.classList.remove("hidden");
+            try {
+                const base64 = await new Promise((res, rej) => {
+                    const r = new FileReader();
+                    r.onload = () => res(r.result.split(",")[1]);
+                    r.onerror = rej;
+                    r.readAsDataURL(file);
+                });
+                const prompt = `Extract battery invoice lines into a strict JSON array. Each object must have:
+- "desc": string (brand and model, e.g. "PHLORIDE BATTERY 150AH")
+- "qty": number
+- "fob": number (unit FOB price in USD)
+- "ah": number (amperage capacity in Ah, e.g., 70, 100, 150, 200)
+Return ONLY raw JSON array.`;
+
+                const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(state.apiKey)}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [
+                                { text: prompt },
+                                { inline_data: { mime_type: file.type || "image/jpeg", data: base64 } }
+                            ]
+                        }]
+                    })
+                });
+                const json = await resp.json();
+                if (json.error) throw new Error(json.error.message);
+                const rawTxt = json.candidates[0].content.parts[0].text.replace(/```json/gi, "").replace(/```/g, "").trim();
+                const extracted = JSON.parse(rawTxt);
+
+                const newId = "ship_" + Date.now();
+                state.shipments.push({
+                    id: newId,
+                    title: "فاتورة بطاريات AI (" + new Date().toLocaleDateString("ar-LY") + ")",
+                    exchangeRate: getActiveShipment().exchangeRate || 10.25,
+                    profitMargin: 12,
+                    containersCount: 1,
+                    seaFreightUSD: 4500,
+                    loadingFeesUSD: 200,
+                    customsLYD: 1500,
+                    localTransportLYD: 1200,
+                    unloadingTotalLYD: 500,
+                    pressingTotalLYD: 0,
+                    searchFilter: "",
+                    items: extracted.map((x, idx) => ({
+                        seq: idx + 1,
+                        desc: x.desc || "بطارية مستخرجة",
+                        qty: Number(x.qty) || 50,
+                        fob: Number(x.fob) || 40,
+                        ah: Number(x.ah) || 100,
+                        note: ""
+                    }))
+                });
+                state.activeShipmentId = newId;
+                saveState();
+                renderApp();
+                alert("✅ تم استخراج " + extracted.length + " بطارية وإنشاء شحنة جديدة بنجاح!");
+            } catch (err) {
+                alert("❌ خطأ في قراءة الفاتورة: " + err.message);
+            } finally {
+                banner.classList.add("hidden");
+            }
+        }
+
+        // PWA Manifest
+        try {
+            const manifest = {
+                name: "سواعد الغد - تسعير البطاريات",
+                short_name: "سواعد البطاريات",
+                start_url: "./index.html",
+                display: "standalone",
+                background_color: "#090d16",
+                theme_color: "#f59e0b",
+                icons: [{
+                    src: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23f59e0b'/><text x='50' y='64' font-size='44' font-family='sans-serif' font-weight='bold' text-anchor='middle' fill='%23090d16'>BAT</text></svg>",
+                    sizes: "192x192",
+                    type: "image/svg+xml"
+                }]
+            };
+            const mLink = document.createElement("link");
+            mLink.rel = "manifest";
+            mLink.href = URL.createObjectURL(new Blob([JSON.stringify(manifest)], { type: "application/json" }));
+            document.head.appendChild(mLink);
+        } catch (e) {}
+
+        loadState();
+        renderApp();
+    </script>
 </body>
 </html>
