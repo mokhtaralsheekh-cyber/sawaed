@@ -6,8 +6,8 @@
     <meta name="theme-color" content="#0f172a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="سواعد الغد - بطاريات">
-    <title>منظومة تسعير البطاريات - سواعد الغد (PWA)</title>
+    <meta name="apple-mobile-web-app-title" content="سواعد البطاريات">
+    <title>منظومة تسعير النضائد والبطاريات - شركة سواعد الغد الحديثة</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
@@ -32,7 +32,7 @@
             <div class="flex items-center gap-2.5">
                 <div class="bg-amber-500 text-slate-950 font-black px-3 py-1.5 rounded-xl text-base sm:text-lg shadow">سواعد الغد</div>
                 <div>
-                    <h1 class="text-sm sm:text-base font-extrabold text-white leading-tight">منظومة تسعير البطاريات (توزيع حسب الأمبير Ah)</h1>
+                    <h1 class="text-sm sm:text-base font-extrabold text-white leading-tight">منظومة تسعير البطاريات (توزيع المصاريف طردياً حسب Ah)</h1>
                     <p class="text-[11px] text-slate-400">شركة سواعد الغد الحديثة للإطارات والنضائد</p>
                 </div>
             </div>
@@ -54,7 +54,7 @@
     <!-- تنبيه الذكاء الاصطناعي -->
     <div id="aiBanner" class="hidden max-w-7xl mx-auto px-4 mt-3 no-print">
         <div class="bg-indigo-950 border border-indigo-500 text-indigo-100 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2">
-            <span>⏳ جاري قراءة فاتورة البطاريات وتحليل الأمبير والأسعار عبر Gemini AI...</span>
+            <span>⏳ جاري قراءة فاتورة البطاريات الرسمية وتحليل الأمبير عبر Gemini AI...</span>
         </div>
     </div>
 
@@ -69,8 +69,8 @@
                 <button type="button" onclick="closeModal('catalogModal')" class="text-slate-400 text-2xl font-bold px-2">&times;</button>
             </div>
             <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs">
-                <input type="text" id="catDesc" placeholder="موديل / ماركة البطارية" class="col-span-2 bg-slate-900 border border-slate-700 rounded p-2 text-white">
-                <input type="number" id="catAh" placeholder="سعة الأمبير Ah (مثلاً 100)" class="bg-slate-900 border border-slate-700 rounded p-2 text-amber-400 font-bold">
+                <input type="text" id="catDesc" placeholder="موديل / ماركة البطارية الرسمية" class="col-span-2 bg-slate-900 border border-slate-700 rounded p-2 text-white">
+                <input type="number" id="catAh" placeholder="سعة الأمبير Ah" class="bg-slate-900 border border-slate-700 rounded p-2 text-amber-400 font-bold">
                 <input type="number" step="0.01" id="catFob" placeholder="سعر FOB ($)" class="bg-slate-900 border border-slate-700 rounded p-2 text-white">
                 <button type="button" onclick="saveToCatalog()" class="bg-sky-600 text-white font-bold rounded p-2">＋ إضافة للقاعدة</button>
             </div>
@@ -88,7 +88,7 @@
                 </table>
             </div>
             <div class="flex justify-between items-center pt-2 border-t border-slate-800 text-xs">
-                <button type="button" onclick="resetCatalog()" class="text-rose-400 underline">استعادة قاعدة البطاريات الأصلية</button>
+                <button type="button" onclick="resetCatalog()" class="text-rose-400 underline">استعادة القاعدة الرسمية</button>
                 <button type="button" onclick="closeModal('catalogModal')" class="bg-slate-800 px-4 py-2 rounded-lg font-bold">إغلاق</button>
             </div>
         </div>
@@ -117,12 +117,11 @@
     </div>
 
     <script>
-        // عينة افتراضية للبطاريات وتوزيع المصاريف حسب سعة الأمبير Ah
+        // البيانات الرسمية المعتمدة للبطاريات ونقاط الأمبير الخاصة بالفواتير الرسمية
         const INITIAL_BATTERIES = [
-            { seq: 1, desc: "PHLORIDE BATTERY 70AH", qty: 200, fob: 34.0, ah: 70, note: "بطارية سيارات خفيفة" },
-            { seq: 2, desc: "PHLORIDE BATTERY 100AH", qty: 150, fob: 45.0, ah: 100, note: "بطارية سيارات دفع رباعي" },
-            { seq: 3, desc: "PHLORIDE BATTERY 150AH", qty: 100, fob: 72.0, ah: 150, note: "بطارية شاحنات متوسطة" },
-            { seq: 4, desc: "PHLORIDE BATTERY 200AH", qty: 50, fob: 98.0, ah: 200, note: "بطارية شاحنات ثقيلة ومعدات" }
+            { seq: 1, desc: "PHLORIDE BATTERY 70AH", qty: 300, fob: 34.0, ah: 70, note: "بطارية سيارات خفيفة" },
+            { seq: 2, desc: "PHLORIDE BATTERY 100AH", qty: 200, fob: 45.0, ah: 100, note: "بطارية سيارات دفع رباعي" },
+            { seq: 3, desc: "PHLORIDE BATTERY 150AH", qty: 150, fob: 72.0, ah: 150, note: "بطارية شاحنات متوسطة" }
         ];
 
         const DEFAULT_CATALOG = INITIAL_BATTERIES.map(x => ({
@@ -131,16 +130,16 @@
             fob: x.fob
         }));
 
-        const STORAGE_KEY = "sawaed_batteries_ah_v1";
+        const STORAGE_KEY = "sawaed_batteries_official_v1";
 
         let state = {
             apiKey: "",
-            activeShipmentId: "ship_bat1",
+            activeShipmentId: "ship_bat_official",
             catalog: JSON.parse(JSON.stringify(DEFAULT_CATALOG)),
             shipments: [
                 {
-                    id: "ship_bat1",
-                    title: "شحنة نضائد وبطاريات PHLORIDE",
+                    id: "ship_bat_official",
+                    title: "شحنة نضائد PHLORIDE الرسمية",
                     exchangeRate: 10.25,
                     profitMargin: 12,
                     containersCount: 1,
@@ -182,7 +181,7 @@
             return state.shipments.find(s => s.id === state.activeShipmentId) || state.shipments[0];
         }
 
-        // محرك حسابات البطاريات بناءً على سعة الأمبير Ah طردياً
+        // محرك توزيع المصاريف طردياً حسب إجمالي الأمبير (Ah) لكل بطارية
         function computeMetrics(s) {
             const rate = Number(s.exchangeRate) || 0;
             const marginPct = (Number(s.profitMargin) || 0) / 100;
@@ -196,7 +195,7 @@
 
             let totalPieces = 0;
             let totalFobUSD = 0;
-            let totalAhUnits = 0; // إجمالي وحدات الأمبير (الكمية × سعة الأمبير)
+            let totalAhUnits = 0; // إجمالي وحدات الأمبير للشحنة
 
             s.items.forEach(item => {
                 const q = Number(item.qty) || 0;
@@ -210,7 +209,7 @@
             // إجمالي التكاليف التشغيلية الكلية بالدينار الليبي
             const totalOperatingLYD = ((seaUSD + loadUSD) * cCount * rate) + (custLYD * cCount) + (transLYD * cCount) + unloadLYD + pressLYD;
 
-            // تكلفة مصاريف التشغيل لكل 1 أمبير (Ah)
+            // نصيب كل 1 أمبير (Ah) من المصاريف
             const expensePerAhLYD = totalAhUnits > 0 ? (totalOperatingLYD / totalAhUnits) : 0;
 
             let totalLandedLYD = 0;
@@ -223,9 +222,9 @@
 
                 const rowFobUSD = q * f;
                 const itemTotalAh = q * ah;
-                const shareOfExpensesLYD = itemTotalAh * expensePerAhLYD; // نصيب الصنف من المصاريف حسب إجمالي أمبيره
+                const shareOfExpensesLYD = itemTotalAh * expensePerAhLYD; // التوزيع طردياً حسب إجمالي أمبير الصنف
                 const totalCostLYD = (q * f * rate) + shareOfExpensesLYD;
-                const landedUnitLYD = q > 0 ? (totalCostLYD / q) : 0; // التكلفة الواصلة للقطعة الواحدة
+                const landedUnitLYD = q > 0 ? (totalCostLYD / q) : 0; // التكلفة الواصلة للقطعة
                 const sellingUnitLYD = landedUnitLYD * (1 + marginPct); // سعر البيع
                 const profitUnitLYD = sellingUnitLYD - landedUnitLYD; // الربح للقطعة
 
@@ -300,8 +299,8 @@
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 no-print">
                     <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-3">
                         <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                            <h2 class="text-sm font-extrabold text-amber-400">🎛️ لوحة مصاريف شحنة النضائد (توزيع حسب Ah)</h2>
-                            <span class="text-[11px] text-slate-400">حساب آلي طردي حسب الأمبير</span>
+                            <h2 class="text-sm font-extrabold text-amber-400">🎛️ لوحة مصاريف الشحنة (توزيع طردي حسب Ah)</h2>
+                            <span class="text-[11px] text-slate-400">تحديث فوري للحسابات</span>
                         </div>
                         <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
                             <div class="bg-slate-950 p-2.5 rounded-xl border border-amber-500/30">
@@ -387,7 +386,7 @@
 
                 <!-- 3. شريط البحث والأصناف -->
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow no-print flex flex-wrap items-center gap-2">
-                    <input type="text" placeholder="🔍 ابحث في البطاريات (مثلاً 150Ah أو PHLORIDE)..." value="${escapeHtml(s.searchFilter || '')}"
+                    <input type="text" placeholder="🔍 ابحث في البطاريات الرسمية..." value="${escapeHtml(s.searchFilter || '')}"
                         oninput="updateSearch(this.value)"
                         class="flex-1 min-w-[200px] bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none">
                     <select id="quickCatalogSelect" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 max-w-xs">
@@ -596,7 +595,7 @@
 
         function addBlankRow() {
             const s = getActiveShipment();
-            s.items.push({ seq: s.items.length + 1, desc: "بطارية جديدة PHLORIDE", qty: 50, fob: 40.0, ah: 100, note: "" });
+            s.items.push({ seq: s.items.length + 1, desc: "بطارية رسمية جديدة", qty: 50, fob: 40.0, ah: 100, note: "" });
             saveState();
             renderApp();
         }
@@ -676,7 +675,7 @@
         }
 
         function resetCatalog() {
-            if (confirm("استعادة قاعدة البطاريات الأصلية؟")) {
+            if (confirm("استعادة القاعدة الرسمية؟")) {
                 state.catalog = JSON.parse(JSON.stringify(DEFAULT_CATALOG));
                 saveState();
                 renderCatalog();
@@ -696,7 +695,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
-            a.download = "sawaed_batteries_backup_" + Date.now() + ".json";
+            a.download = "sawaed_batteries_official_" + Date.now() + ".json";
             a.click();
             URL.revokeObjectURL(url);
         }
@@ -724,7 +723,7 @@
 
         function triggerAI() {
             if (!state.apiKey) {
-                const k = prompt("أدخل مفتاح Gemini API Key لقراءة فاتورة البطاريات:");
+                const k = prompt("أدخل مفتاح Gemini API Key لقراءة الفاتورة:");
                 if (!k || !k.trim()) return;
                 state.apiKey = k.trim();
                 saveState();
@@ -746,11 +745,11 @@
                     r.onerror = rej;
                     r.readAsDataURL(file);
                 });
-                const prompt = `Extract battery invoice lines into a strict JSON array. Each object must have:
-- "desc": string (brand and model, e.g. "PHLORIDE BATTERY 150AH")
+                const prompt = `Extract official battery invoice lines into a strict JSON array. Each object must have:
+- "desc": string (brand and exact model)
 - "qty": number
 - "fob": number (unit FOB price in USD)
-- "ah": number (amperage capacity in Ah, e.g., 70, 100, 150, 200)
+- "ah": number (amperage capacity in Ah, strictly exact from invoice)
 Return ONLY raw JSON array.`;
 
                 const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(state.apiKey)}`, {
@@ -773,7 +772,7 @@ Return ONLY raw JSON array.`;
                 const newId = "ship_" + Date.now();
                 state.shipments.push({
                     id: newId,
-                    title: "فاتورة بطاريات AI (" + new Date().toLocaleDateString("ar-LY") + ")",
+                    title: "فاتورة رسمية AI (" + new Date().toLocaleDateString("ar-LY") + ")",
                     exchangeRate: getActiveShipment().exchangeRate || 10.25,
                     profitMargin: 12,
                     containersCount: 1,
@@ -786,7 +785,7 @@ Return ONLY raw JSON array.`;
                     searchFilter: "",
                     items: extracted.map((x, idx) => ({
                         seq: idx + 1,
-                        desc: x.desc || "بطارية مستخرجة",
+                        desc: x.desc || "بطارية رسمية",
                         qty: Number(x.qty) || 50,
                         fob: Number(x.fob) || 40,
                         ah: Number(x.ah) || 100,
@@ -796,9 +795,9 @@ Return ONLY raw JSON array.`;
                 state.activeShipmentId = newId;
                 saveState();
                 renderApp();
-                alert("✅ تم استخراج " + extracted.length + " بطارية وإنشاء شحنة جديدة بنجاح!");
+                alert("✅ تم استخراج الفاتورة الرسمية بنجاح!");
             } catch (err) {
-                alert("❌ خطأ في قراءة الفاتورة: " + err.message);
+                alert("❌ خطأ: " + err.message);
             } finally {
                 banner.classList.add("hidden");
             }
