@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="سواعد البطاريات">
-    <title>منظومة تسعير النضائد والبطاريات - شركة سواعد الغد الحديثة</title>
+    <title>منظومة تسعير البطاريات والنضائد - شركة سواعد الغد الحديثة</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
@@ -32,16 +32,16 @@
             <div class="flex items-center gap-2.5">
                 <div class="bg-amber-500 text-slate-950 font-black px-3 py-1.5 rounded-xl text-base sm:text-lg shadow">سواعد الغد</div>
                 <div>
-                    <h1 class="text-sm sm:text-base font-extrabold text-white leading-tight">منظومة تسعير البطاريات (توزيع المصاريف طردياً حسب Ah)</h1>
+                    <h1 class="text-sm sm:text-base font-extrabold text-white leading-tight">منظومة تسعير البطاريات (حسب محتوى الفاتورة و Ah)</h1>
                     <p class="text-[11px] text-slate-400">شركة سواعد الغد الحديثة للإطارات والنضائد</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-1.5 flex-wrap">
                 <button type="button" onclick="createNewShipment()" class="bg-amber-500 active:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs sm:text-sm shadow">＋ شحنة جديدة</button>
-                <button type="button" onclick="triggerAI()" class="bg-indigo-600 active:bg-indigo-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs sm:text-sm shadow">🤖 قراءة فاتورة AI</button>
+                <button type="button" onclick="triggerAI()" class="bg-indigo-600 active:bg-indigo-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs sm:text-sm shadow">🤖 قراءة الفاتورة AI</button>
                 <input type="file" id="aiFile" accept="image/*" class="hidden" onchange="processAIFile(event)">
-                <button type="button" onclick="openModal('catalogModal')" class="bg-sky-700 active:bg-sky-600 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs sm:text-sm">📚 القاعدة</button>
+                <button type="button" onclick="openModal('catalogModal')" class="bg-sky-700 active:bg-sky-600 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs sm:text-sm">📚 قاعدة الفاتورة</button>
                 <button type="button" onclick="openModal('settingsModal')" class="bg-slate-800 border border-slate-700 text-slate-200 px-2.5 py-1.5 rounded-lg text-xs sm:text-sm">⚙️</button>
                 <button type="button" onclick="downloadBackup()" class="bg-emerald-700 active:bg-emerald-600 text-white px-2.5 py-1.5 rounded-lg text-xs sm:text-sm">💾</button>
             </div>
@@ -54,31 +54,31 @@
     <!-- تنبيه الذكاء الاصطناعي -->
     <div id="aiBanner" class="hidden max-w-7xl mx-auto px-4 mt-3 no-print">
         <div class="bg-indigo-950 border border-indigo-500 text-indigo-100 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2">
-            <span>⏳ جاري قراءة فاتورة البطاريات الرسمية وتحليل الأمبير عبر Gemini AI...</span>
+            <span>⏳ جاري استخراج محتويات الفاتورة بدقة وتوزيعها حسب الأمبير Ah عبر Gemini AI...</span>
         </div>
     </div>
 
     <!-- جسم التطبيق -->
     <main id="appBody" class="max-w-7xl mx-auto px-3 sm:px-6 pt-4 space-y-5"></main>
 
-    <!-- نافذة قاعدة بيانات البطاريات -->
+    <!-- نافذة قاعدة محتويات الفاتورة -->
     <div id="catalogModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-3 z-50 no-print">
         <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col p-4 sm:p-6 space-y-3">
             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                <h3 class="text-base sm:text-lg font-bold text-sky-400">📚 قاعدة بيانات النضائد (البطاريات) والأمبير (Ah)</h3>
+                <h3 class="text-base sm:text-lg font-bold text-sky-400">📚 بنود ومحتويات الفاتورة الرسمية (Ah)</h3>
                 <button type="button" onclick="closeModal('catalogModal')" class="text-slate-400 text-2xl font-bold px-2">&times;</button>
             </div>
             <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs">
-                <input type="text" id="catDesc" placeholder="موديل / ماركة البطارية الرسمية" class="col-span-2 bg-slate-900 border border-slate-700 rounded p-2 text-white">
+                <input type="text" id="catDesc" placeholder="اسم وطراز البطارية في الفاتورة" class="col-span-2 bg-slate-900 border border-slate-700 rounded p-2 text-white">
                 <input type="number" id="catAh" placeholder="سعة الأمبير Ah" class="bg-slate-900 border border-slate-700 rounded p-2 text-amber-400 font-bold">
                 <input type="number" step="0.01" id="catFob" placeholder="سعر FOB ($)" class="bg-slate-900 border border-slate-700 rounded p-2 text-white">
-                <button type="button" onclick="saveToCatalog()" class="bg-sky-600 text-white font-bold rounded p-2">＋ إضافة للقاعدة</button>
+                <button type="button" onclick="saveToCatalog()" class="bg-sky-600 text-white font-bold rounded p-2">＋ إضافة بند</button>
             </div>
             <div class="overflow-y-auto flex-1 border border-slate-800 rounded-xl">
                 <table class="w-full text-right text-xs">
                     <thead class="bg-slate-950 text-slate-300 sticky top-0">
                         <tr>
-                            <th class="p-2">موديل / ماركة البطارية</th>
+                            <th class="p-2">البند / الموديل</th>
                             <th class="p-2 text-center">الأمبير (Ah)</th>
                             <th class="p-2 text-center">FOB ($)</th>
                             <th class="p-2 text-center">حذف</th>
@@ -88,7 +88,7 @@
                 </table>
             </div>
             <div class="flex justify-between items-center pt-2 border-t border-slate-800 text-xs">
-                <button type="button" onclick="resetCatalog()" class="text-rose-400 underline">استعادة القاعدة الرسمية</button>
+                <button type="button" onclick="resetCatalog()" class="text-rose-400 underline">إعادة تعيين بنود الفاتورة</button>
                 <button type="button" onclick="closeModal('catalogModal')" class="bg-slate-800 px-4 py-2 rounded-lg font-bold">إغلاق</button>
             </div>
         </div>
@@ -117,29 +117,29 @@
     </div>
 
     <script>
-        // البيانات الرسمية المعتمدة للبطاريات ونقاط الأمبير الخاصة بالفواتير الرسمية
-        const INITIAL_BATTERIES = [
-            { seq: 1, desc: "PHLORIDE BATTERY 70AH", qty: 300, fob: 34.0, ah: 70, note: "بطارية سيارات خفيفة" },
-            { seq: 2, desc: "PHLORIDE BATTERY 100AH", qty: 200, fob: 45.0, ah: 100, note: "بطارية سيارات دفع رباعي" },
-            { seq: 3, desc: "PHLORIDE BATTERY 150AH", qty: 150, fob: 72.0, ah: 150, note: "بطارية شاحنات متوسطة" }
+        // محتويات الفاتورة الفعلية القياسية للبطاريات ونقاط الأمبير الخاصة بها
+        const INITIAL_INVOICE_ITEMS = [
+            { seq: 1, desc: "PHLORIDE BATTERY 70AH", qty: 300, fob: 34.0, ah: 70, note: "بند فاتورة أساسي" },
+            { seq: 2, desc: "PHLORIDE BATTERY 100AH", qty: 200, fob: 45.0, ah: 100, note: "بند فاتورة أساسي" },
+            { seq: 3, desc: "PHLORIDE BATTERY 150AH", qty: 150, fob: 72.0, ah: 150, note: "بند فاتورة أساسي" }
         ];
 
-        const DEFAULT_CATALOG = INITIAL_BATTERIES.map(x => ({
+        const DEFAULT_CATALOG = INITIAL_INVOICE_ITEMS.map(x => ({
             desc: x.desc,
             ah: x.ah,
             fob: x.fob
         }));
 
-        const STORAGE_KEY = "sawaed_batteries_official_v1";
+        const STORAGE_KEY = "sawaed_batteries_invoice_only_v1";
 
         let state = {
             apiKey: "",
-            activeShipmentId: "ship_bat_official",
+            activeShipmentId: "ship_invoice",
             catalog: JSON.parse(JSON.stringify(DEFAULT_CATALOG)),
             shipments: [
                 {
-                    id: "ship_bat_official",
-                    title: "شحنة نضائد PHLORIDE الرسمية",
+                    id: "ship_invoice",
+                    title: "شحنة نضائد PHLORIDE (محتويات الفاتورة)",
                     exchangeRate: 10.25,
                     profitMargin: 12,
                     containersCount: 1,
@@ -150,7 +150,7 @@
                     unloadingTotalLYD: 500,
                     pressingTotalLYD: 0,
                     searchFilter: "",
-                    items: JSON.parse(JSON.stringify(INITIAL_BATTERIES))
+                    items: JSON.parse(JSON.stringify(INITIAL_INVOICE_ITEMS))
                 }
             ]
         };
@@ -181,7 +181,7 @@
             return state.shipments.find(s => s.id === state.activeShipmentId) || state.shipments[0];
         }
 
-        // محرك توزيع المصاريف طردياً حسب إجمالي الأمبير (Ah) لكل بطارية
+        // محرك توزيع المصاريف طردياً حسب إجمالي الأمبير (Ah) لبنود الفاتورة
         function computeMetrics(s) {
             const rate = Number(s.exchangeRate) || 0;
             const marginPct = (Number(s.profitMargin) || 0) / 100;
@@ -195,7 +195,7 @@
 
             let totalPieces = 0;
             let totalFobUSD = 0;
-            let totalAhUnits = 0; // إجمالي وحدات الأمبير للشحنة
+            let totalAhUnits = 0; // إجمالي وحدات الأمبير لشحنة الفاتورة
 
             s.items.forEach(item => {
                 const q = Number(item.qty) || 0;
@@ -222,7 +222,7 @@
 
                 const rowFobUSD = q * f;
                 const itemTotalAh = q * ah;
-                const shareOfExpensesLYD = itemTotalAh * expensePerAhLYD; // التوزيع طردياً حسب إجمالي أمبير الصنف
+                const shareOfExpensesLYD = itemTotalAh * expensePerAhLYD; // توزيع طردي حسب إجمالي أمبير البند
                 const totalCostLYD = (q * f * rate) + shareOfExpensesLYD;
                 const landedUnitLYD = q > 0 ? (totalCostLYD / q) : 0; // التكلفة الواصلة للقطعة
                 const sellingUnitLYD = landedUnitLYD * (1 + marginPct); // سعر البيع
@@ -263,7 +263,7 @@
             bar.innerHTML = state.shipments.map(s => `
                 <button type="button" onclick="selectShipment('${s.id}')"
                     class="px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition ${s.id === state.activeShipmentId ? 'tab-active shadow' : 'tab-inactive'}">
-                    🔋 ${s.title}
+                    📄 ${s.title}
                 </button>
             `).join('');
         }
@@ -284,23 +284,23 @@
                 <!-- 1. شريط التحكم العلوي -->
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg no-print flex flex-wrap justify-between items-center gap-3">
                     <div class="flex-1 min-w-[220px]">
-                        <label class="block text-[11px] text-slate-400 mb-1">اسم / مرجع الشحنة:</label>
+                        <label class="block text-[11px] text-slate-400 mb-1">اسم الفاتورة / الشحنة:</label>
                         <input type="text" value="${escapeHtml(s.title)}" onchange="updateField('title', this.value)"
                             class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-sm sm:text-base font-extrabold text-amber-400 outline-none">
                     </div>
                     <div class="flex flex-wrap gap-2">
-                        <button type="button" onclick="window.print()" class="bg-emerald-600 active:bg-emerald-500 text-white font-bold px-3.5 py-2 rounded-xl text-xs sm:text-sm shadow">🖨️ طباعة / PDF للزبائن</button>
+                        <button type="button" onclick="window.print()" class="bg-emerald-600 active:bg-emerald-500 text-white font-bold px-3.5 py-2 rounded-xl text-xs sm:text-sm shadow">🖨️ طباعة الفاتورة / PDF</button>
                         <button type="button" onclick="sendWhatsApp()" class="bg-green-600 active:bg-green-500 text-white font-bold px-3.5 py-2 rounded-xl text-xs sm:text-sm shadow">💬 إرسال واتساب</button>
                         <button type="button" onclick="removeShipment()" class="bg-rose-950 border border-rose-800 text-rose-300 px-3 py-2 rounded-xl text-xs">حذف</button>
                     </div>
                 </div>
 
-                <!-- 2. لوحة المصاريف وتوزيع الأمبير -->
+                <!-- 2. لوحة المصاريف وتوزيع الأمبير لمحتويات الفاتورة -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 no-print">
                     <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-3">
                         <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                            <h2 class="text-sm font-extrabold text-amber-400">🎛️ لوحة مصاريف الشحنة (توزيع طردي حسب Ah)</h2>
-                            <span class="text-[11px] text-slate-400">تحديث فوري للحسابات</span>
+                            <h2 class="text-sm font-extrabold text-amber-400">🎛️ مصاريف الشحنة وتوزيع بنود الفاتورة حسب Ah</h2>
+                            <span class="text-[11px] text-slate-400">تحديث فوري</span>
                         </div>
                         <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
                             <div class="bg-slate-950 p-2.5 rounded-xl border border-amber-500/30">
@@ -357,11 +357,11 @@
                         </div>
                         <div class="grid grid-cols-2 gap-2.5 text-xs">
                             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                                <div class="text-slate-400">إجمالي عدد البطاريات</div>
-                                <div class="text-lg font-black text-white mt-0.5">${m.totalPieces.toLocaleString()} <span class="text-[11px] font-normal text-slate-400">بطارية</span></div>
+                                <div class="text-slate-400">إجمالي قطع الفاتورة</div>
+                                <div class="text-lg font-black text-white mt-0.5">${m.totalPieces.toLocaleString()} <span class="text-[11px] font-normal text-slate-400">قطعة</span></div>
                             </div>
                             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                                <div class="text-slate-400">إجمالي قيمة البضاعة FOB</div>
+                                <div class="text-slate-400">إجمالي قيمة الفاتورة FOB</div>
                                 <div class="text-lg font-black text-sky-400 mt-0.5">$${m.totalFobUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
                             </div>
                             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
@@ -384,26 +384,26 @@
                     </div>
                 </div>
 
-                <!-- 3. شريط البحث والأصناف -->
+                <!-- 3. شريط البحث وإضافة بنود الفاتورة -->
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow no-print flex flex-wrap items-center gap-2">
-                    <input type="text" placeholder="🔍 ابحث في البطاريات الرسمية..." value="${escapeHtml(s.searchFilter || '')}"
+                    <input type="text" placeholder="🔍 ابحث في بنود الفاتورة..." value="${escapeHtml(s.searchFilter || '')}"
                         oninput="updateSearch(this.value)"
                         class="flex-1 min-w-[200px] bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none">
                     <select id="quickCatalogSelect" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 max-w-xs">
                         ${state.catalog.map((c, i) => `<option value="${i}">${c.desc} (${c.ah}Ah) - $${c.fob}</option>`).join('')}
                     </select>
-                    <button type="button" onclick="addFromCatalog()" class="bg-amber-500 text-slate-950 font-bold px-3.5 py-2 rounded-xl text-xs">＋ من القاعدة</button>
-                    <button type="button" onclick="addBlankRow()" class="bg-slate-800 border border-slate-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs">＋ بطارية جديدة</button>
+                    <button type="button" onclick="addFromCatalog()" class="bg-amber-500 text-slate-950 font-bold px-3.5 py-2 rounded-xl text-xs">＋ من بنود الفاتورة</button>
+                    <button type="button" onclick="addBlankRow()" class="bg-slate-800 border border-slate-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs">＋ بند جديد للفاتورة</button>
                 </div>
 
-                <!-- 4. جدول البطاريات التفصيلي -->
+                <!-- 4. جدول بنود الفاتورة التفصيلي -->
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden no-print">
                     <div class="overflow-x-auto">
                         <table class="w-full text-right border-collapse text-xs">
                             <thead>
                                 <tr class="bg-slate-950 text-slate-300 border-b border-slate-800">
                                     <th class="p-2.5 text-center">ت</th>
-                                    <th class="p-2.5 min-w-[220px]">موديل / ماركة البطارية</th>
+                                    <th class="p-2.5 min-w-[220px]">بنود ومحتويات الفاتورة</th>
                                     <th class="p-2.5 text-center">الكمية</th>
                                     <th class="p-2.5 text-center text-amber-400">سعة الأمبير (Ah)</th>
                                     <th class="p-2.5 text-center">FOB ($)</th>
@@ -484,7 +484,7 @@
                         <thead>
                             <tr class="bg-gray-100">
                                 <th class="border border-gray-400 p-1.5 text-center w-8">ت</th>
-                                <th class="border border-gray-400 p-1.5">موديل / ماركة البطارية</th>
+                                <th class="border border-gray-400 p-1.5">محتويات وبنود الفاتورة</th>
                                 <th class="border border-gray-400 p-1.5 text-center w-28">سعر البيع (د.ل)</th>
                             </tr>
                         </thead>
@@ -525,7 +525,7 @@
             const id = "ship_" + Date.now();
             state.shipments.push({
                 id,
-                title: "شحنة بطاريات جديدة #" + (state.shipments.length + 1),
+                title: "شحنة فاتورة جديدة #" + (state.shipments.length + 1),
                 exchangeRate: getActiveShipment().exchangeRate || 10.25,
                 profitMargin: 12,
                 containersCount: 1,
@@ -595,7 +595,7 @@
 
         function addBlankRow() {
             const s = getActiveShipment();
-            s.items.push({ seq: s.items.length + 1, desc: "بطارية رسمية جديدة", qty: 50, fob: 40.0, ah: 100, note: "" });
+            s.items.push({ seq: s.items.length + 1, desc: "بند فاتورة جديد", qty: 50, fob: 40.0, ah: 100, note: "" });
             saveState();
             renderApp();
         }
@@ -659,7 +659,7 @@
             const desc = document.getElementById("catDesc").value.trim();
             const ah = Number(document.getElementById("catAh").value) || 100;
             const fob = Number(document.getElementById("catFob").value) || 40;
-            if (!desc) { alert("أدخل اسم البطارية."); return; }
+            if (!desc) { alert("أدخل اسم البند."); return; }
             state.catalog.unshift({ desc, ah, fob });
             saveState();
             renderCatalog();
@@ -675,7 +675,7 @@
         }
 
         function resetCatalog() {
-            if (confirm("استعادة القاعدة الرسمية؟")) {
+            if (confirm("إعادة تعيين بنود الفاتورة؟")) {
                 state.catalog = JSON.parse(JSON.stringify(DEFAULT_CATALOG));
                 saveState();
                 renderCatalog();
@@ -695,7 +695,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
-            a.download = "sawaed_batteries_official_" + Date.now() + ".json";
+            a.download = "sawaed_invoice_items_" + Date.now() + ".json";
             a.click();
             URL.revokeObjectURL(url);
         }
@@ -745,11 +745,11 @@
                     r.onerror = rej;
                     r.readAsDataURL(file);
                 });
-                const prompt = `Extract official battery invoice lines into a strict JSON array. Each object must have:
-- "desc": string (brand and exact model)
+                const prompt = `Extract ONLY the invoice line items from this battery invoice into a strict JSON array. Each object must have:
+- "desc": string (exact item description/model from invoice)
 - "qty": number
 - "fob": number (unit FOB price in USD)
-- "ah": number (amperage capacity in Ah, strictly exact from invoice)
+- "ah": number (amperage capacity in Ah extracted strictly from invoice)
 Return ONLY raw JSON array.`;
 
                 const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(state.apiKey)}`, {
@@ -772,7 +772,7 @@ Return ONLY raw JSON array.`;
                 const newId = "ship_" + Date.now();
                 state.shipments.push({
                     id: newId,
-                    title: "فاتورة رسمية AI (" + new Date().toLocaleDateString("ar-LY") + ")",
+                    title: "فاتورة مستخرجة (" + new Date().toLocaleDateString("ar-LY") + ")",
                     exchangeRate: getActiveShipment().exchangeRate || 10.25,
                     profitMargin: 12,
                     containersCount: 1,
@@ -785,17 +785,17 @@ Return ONLY raw JSON array.`;
                     searchFilter: "",
                     items: extracted.map((x, idx) => ({
                         seq: idx + 1,
-                        desc: x.desc || "بطارية رسمية",
+                        desc: x.desc || "بند الفاتورة",
                         qty: Number(x.qty) || 50,
                         fob: Number(x.fob) || 40,
                         ah: Number(x.ah) || 100,
-                        note: ""
+                        note: "من الفاتورة الرسمية"
                     }))
                 });
                 state.activeShipmentId = newId;
                 saveState();
                 renderApp();
-                alert("✅ تم استخراج الفاتورة الرسمية بنجاح!");
+                alert("✅ تم قراءة محتويات الفاتورة بدقة وإضافتها بنجاح!");
             } catch (err) {
                 alert("❌ خطأ: " + err.message);
             } finally {
@@ -806,14 +806,14 @@ Return ONLY raw JSON array.`;
         // PWA Manifest
         try {
             const manifest = {
-                name: "سواعد الغد - تسعير البطاريات",
-                short_name: "سواعد البطاريات",
+                name: "سواعد الغد - محتويات الفاتورة",
+                short_name: "فواتير سواعد",
                 start_url: "./index.html",
                 display: "standalone",
                 background_color: "#090d16",
                 theme_color: "#f59e0b",
                 icons: [{
-                    src: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23f59e0b'/><text x='50' y='64' font-size='44' font-family='sans-serif' font-weight='bold' text-anchor='middle' fill='%23090d16'>BAT</text></svg>",
+                    src: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23f59e0b'/><text x='50' y='64' font-size='44' font-family='sans-serif' font-weight='bold' text-anchor='middle' fill='%23090d16'>INV</text></svg>",
                     sizes: "192x192",
                     type: "image/svg+xml"
                 }]

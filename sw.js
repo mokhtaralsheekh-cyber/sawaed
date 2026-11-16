@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sawaed-bat-official-v1';
+const CACHE_NAME = 'sawaed-invoice-only-v1';
 const ASSETS = ['./index.html', './manifest.json'];
 self.addEventListener('install', e => {
     e.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)));
